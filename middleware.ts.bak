@@ -1,0 +1,65 @@
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { auth } from "@/auth";
+
+export default auth((req) => {
+  const { pathname } = req.nextUrl;
+  const isAuthenticated = !!req.auth;
+  const userRole = req.auth?.user?.role;
+
+  // Public routes that don't require authentication
+  const publicRoutes = ["/", "/login", "/api/auth"];
+  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
+
+  // Protected dashboard routes
+  const isDashboardRoute = pathname.startsWith("/dashboard");
+
+  // If not authenticated and trying to access any protected route (including dashboards)
+  if (!isAuthenticated && !isPublicRoute) {
+    console.log(`Unauthenticated access attempt to: ${pathname}`);
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
+
+  // If authenticated, check role-based access
+  if (isAuthenticated) {
+    // Redirect from login page to appropriate dashboard
+    if (pathname === "/login" || pathname === "/") {
+      switch (userRole) {
+        case "admin":
+          return NextResponse.redirect(new URL("/dashboard/admin", req.url));
+        case "student":
+          return NextResponse.redirect(new URL("/dashboard/student", req.url));
+        case "teacher":
+          return NextResponse.redirect(new URL("/dashboard/teacher", req.url));
+      }
+    }
+
+    // Check role-based access to specific dashboard routes and all their child routes
+    if (isDashboardRoute) {
+      if (pathname.startsWith("/dashboard/admin") && userRole !== "admin") {
+        console.log(`Admin route access denied for user role: ${userRole}`);
+        return NextResponse.redirect(new URL(`/dashboard/${userRole}`, req.url));
+      }
+      if (pathname.startsWith("/dashboard/student") && userRole !== "student") {
+        console.log(`Student route access denied for user role: ${userRole}`);
+        return NextResponse.redirect(new URL(`/dashboard/${userRole}`, req.url));
+      }
+      if (pathname.startsWith("/dashboard/teacher") && userRole !== "teacher") {
+        console.log(`Teacher route access denied for user role: ${userRole}`);
+        return NextResponse.redirect(new URL(`/dashboard/${userRole}`, req.url));
+      }
+    }
+  }
+
+  return NextResponse.next();
+});
+
+export const config = {
+  matcher: [
+    // Match all routes except static files, _next, and auth API routes
+    "/((?!.+\\.[\\w]+$|_next|api/auth).*)", 
+    "/", 
+    // Match API routes except auth
+    "/api/((?!auth).+)"
+  ],
+};
