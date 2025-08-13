@@ -2,26 +2,58 @@
 
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import BottomNav from "@/components/teacher/BottomNav";
+import Link from "next/link";
+import { Calendar, CheckSquare, CreditCard, Clock } from "lucide-react"; // example icons
+
+interface WhatsappGroup {
+  _id: string;
+  link: string;
+}
 
 export default function TeacherDashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [group, setGroup] = useState<WhatsappGroup | null>(null);
 
+  // Auth checks
   useEffect(() => {
-    if (status === "loading") return; // Still loading
-    
+    if (status === "loading") return;
+
     if (!session) {
       router.push("/login");
       return;
     }
-    
+
     if (session.user.role !== "teacher") {
       router.push(`/dashboard/${session.user.role}`);
-      return;
     }
   }, [session, status, router]);
+
+  // Fetch WhatsApp group link
+  useEffect(() => {
+    async function fetchGroup() {
+      try {
+        const res = await fetch("/api/teacher-whatsapp");
+        if (res.ok) {
+          const data = await res.json();
+          setGroup(data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    fetchGroup();
+  }, []);
+
+  const features = [
+    { name: "Mark Attendance", path: "/dashboard/teacher/studentattendancemanage", icon: CheckSquare },
+    { name: "Schedules", path: "/dashboard/teacher/schedules", icon: Calendar },
+    { name: "My Attendance", path: "/dashboard/teacher/my-attendance", icon: Clock },
+    { name: "My Payments", path: "/dashboard/teacher/payments", icon: CreditCard },
+  ];
 
   if (status === "loading") {
     return (
@@ -35,11 +67,12 @@ export default function TeacherDashboard() {
   }
 
   if (!session || session.user.role !== "teacher") {
-    return null; // Will redirect via useEffect
+    return null;
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="pb-16 min-h-screen bg-gray-50 flex flex-col">
+      {/* Header - unchanged */}
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
@@ -57,7 +90,9 @@ export default function TeacherDashboard() {
             </div>
             <div className="flex items-center">
               <div className="mr-4">
-                <span className="text-gray-700">Welcome, {session?.user?.name}</span>
+                <span className="text-gray-700">
+                  Welcome, {session?.user?.name}
+                </span>
               </div>
               <button
                 onClick={() => signOut({ callbackUrl: "/login" })}
@@ -70,22 +105,40 @@ export default function TeacherDashboard() {
         </div>
       </nav>
 
-      <main className="py-10">
-        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-          <div className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="p-5">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">
-                Teacher Portal
-              </h3>
-              <div className="mt-2 max-w-xl text-sm text-gray-500">
-                <p>
-                  Manage your classes, assignments, and student progress.
-                </p>
-              </div>
-            </div>
-          </div>
+      {/* Main Section */}
+      <div className="p-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        {features.map((f) => {
+          const Icon = f.icon;
+          return (
+            <Link
+              key={f.name}
+              href={f.path}
+              className="flex flex-col items-center p-4 bg-white rounded-xl shadow hover:shadow-md hover:scale-[1.02] transition-all duration-200"
+            >
+              <Icon className="h-8 w-8 text-indigo-600 mb-2" />
+              <span className="text-sm font-medium text-gray-700 text-center">{f.name}</span>
+            </Link>
+          );
+        })}
+      </div>
+
+      {/* WhatsApp Group Card */}
+      {group && (
+        <div className="px-4 mt-4">
+          <a
+            href={group.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 bg-green-500 text-white p-4 rounded-xl shadow-lg hover:bg-green-600 transition-colors"
+          >
+           
+            <span className="font-medium text-lg">Join WhatsApp Group</span>
+          </a>
         </div>
-      </main>
+      )}
+
+      {/* Bottom Navigation */}
+      <BottomNav />
     </div>
   );
 }

@@ -7,7 +7,7 @@ import { auth } from "@/auth";
 export async function GET() {
   try {
     const session = await auth();
-    
+
     if (!session || session.user.role !== "admin") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -25,7 +25,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const session = await auth();
-    
+
     if (!session || session.user.role !== "admin") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -34,12 +34,12 @@ export async function POST(request: NextRequest) {
     await connectToDatabase();
 
     // Check if schedule with same title already exists for the same class
-    const existingSchedule = await Schedule.findOne({ 
+    const existingSchedule = await Schedule.findOne({
       title: data.title,
       class: data.class,
       section: data.section || null
     });
-    
+
     if (existingSchedule) {
       return NextResponse.json({ error: "Schedule with this title already exists for this class" }, { status: 400 });
     }

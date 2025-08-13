@@ -99,7 +99,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, role: "student" })}
-                  className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 ${
+                  className={`flex-1 py-2 px-1 rounded-md text-sm font-medium transition-all duration-200 ${
                     formData.role === "student"
                       ? "bg-indigo-600 text-white shadow-sm"
                       : "text-gray-700 hover:text-gray-900 hover:bg-gray-200"
