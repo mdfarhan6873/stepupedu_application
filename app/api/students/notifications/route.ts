@@ -9,7 +9,7 @@ export async function GET() {
     const session = await auth();
 
     // Allow only logged-in teachers
-    if (!session || session.user.role !== "teacher") {
+    if (!session || session.user.role !== "student") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -17,7 +17,7 @@ export async function GET() {
 
     // Fetch only teacher-specific or all notifications
     const notifications = await Notification.find({
-      targetAudience: { $in: ["teachers", "all"] },
+      targetAudience: { $in: ["students", "all"] },
       isActive: true
     })
       .sort({ createdAt: -1 }); // Latest first
