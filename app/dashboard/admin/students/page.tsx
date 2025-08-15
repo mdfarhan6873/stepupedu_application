@@ -1,3 +1,7 @@
+
+
+
+
 "use client";
 
 import { useSession } from "next-auth/react";
@@ -29,27 +33,26 @@ export default function StudentsManagePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
+  const [selectedSection, setSelectedSection] = useState("");
 
   useEffect(() => {
     if (status === "loading") return;
-    
     if (!session || session.user.role !== "admin") {
       router.push("/login");
       return;
     }
-
     fetchStudents();
   }, [session, status, router]);
 
   const fetchStudents = async () => {
     try {
-      const response = await fetch('/api/admin/students/passwords');
+      const response = await fetch("/api/admin/students/passwords");
       if (response.ok) {
         const data = await response.json();
         setStudents(data);
       }
     } catch (error) {
-      console.error('Failed to fetch students:', error);
+      console.error("Failed to fetch students:", error);
     }
     setLoading(false);
   };
@@ -57,82 +60,76 @@ export default function StudentsManagePage() {
   const handleAddStudent = async (studentData: any) => {
     setIsSubmitting(true);
     try {
-      const response = await fetch('/api/admin/students', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const response = await fetch("/api/admin/students", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(studentData),
       });
-
       if (response.ok) {
         fetchStudents();
         setShowForm(false);
       } else {
         const error = await response.json();
-        alert(error.error || 'Failed to add student');
+        alert(error.error || "Failed to add student");
       }
-    } catch (error) {
-      alert('An error occurred while adding the student');
+    } catch {
+      alert("An error occurred while adding the student");
     }
     setIsSubmitting(false);
   };
 
   const handleEditStudent = async (studentData: any) => {
     if (!editingStudent) return;
-    
     setIsSubmitting(true);
     try {
       const response = await fetch(`/api/admin/students/${editingStudent._id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(studentData),
       });
-
       if (response.ok) {
         fetchStudents();
         setEditingStudent(null);
       } else {
         const error = await response.json();
-        alert(error.error || 'Failed to update student');
+        alert(error.error || "Failed to update student");
       }
-    } catch (error) {
-      alert('An error occurred while updating the student');
+    } catch {
+      alert("An error occurred while updating the student");
     }
     setIsSubmitting(false);
   };
 
   const handleDeleteStudent = async (studentId: string) => {
-    if (!confirm('Are you sure you want to delete this student?')) return;
-
+    if (!confirm("Are you sure you want to delete this student?")) return;
     try {
-      const response = await fetch(`/api/admin/students/${studentId}`, {
-        method: 'DELETE',
-      });
-
+      const response = await fetch(`/api/admin/students/${studentId}`, { method: "DELETE" });
       if (response.ok) {
         fetchStudents();
       } else {
-        alert('Failed to delete student');
+        alert("Failed to delete student");
       }
-    } catch (error) {
-      alert('An error occurred while deleting the student');
+    } catch {
+      alert("An error occurred while deleting the student");
     }
   };
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    alert('Copied to clipboard!');
+    alert("Copied to clipboard!");
   };
 
-  const filteredStudents = students.filter(student => {
-    const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         student.rollNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         student.mobileNo.includes(searchTerm);
+  // 🔹 Added section filter here
+  const filteredStudents = students.filter((student) => {
+    const matchesSearch =
+      student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.rollNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.mobileNo.includes(searchTerm);
+
     const matchesClass = selectedClass === "" || student.class === selectedClass;
-    return matchesSearch && matchesClass;
+    const matchesSection = selectedSection === "" || student.section === selectedSection;
+
+    return matchesSearch && matchesClass && matchesSection;
   });
 
   if (status === "loading" || loading) {
@@ -163,7 +160,6 @@ export default function StudentsManagePage() {
               </button>
               <div>
                 <h1 className="text-xl font-bold text-gray-900">Manage Students</h1>
-                
               </div>
             </div>
             <button
@@ -180,7 +176,7 @@ export default function StudentsManagePage() {
       <div className="px-4 sm:px-6 lg:px-8 py-6">
         {/* Filters */}
         <div className="mb-6 bg-white p-4 rounded-lg shadow">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Search Students
@@ -203,14 +199,35 @@ export default function StudentsManagePage() {
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="">All Classes</option>
-                {["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th", "11th", "12th"].map(cls => (
-                  <option key={cls} value={cls}>{cls}</option>
+                {["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th", "11th", "12th"].map((cls) => (
+                  <option key={cls} value={cls}>
+                    {cls}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {/* 🔹 Section Filter */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Filter by Section
+              </label>
+              <select
+                value={selectedSection}
+                onChange={(e) => setSelectedSection(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="">All Sections</option>
+                {["A", "B", "C", "D", "E", "F"].map((sec) => (
+                  <option key={sec} value={sec}>
+                    {sec}
+                  </option>
                 ))}
               </select>
             </div>
           </div>
         </div>
 
+        {/* Students Grid */}
         {/* Students Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredStudents.map((student) => (
@@ -323,9 +340,13 @@ export default function StudentsManagePage() {
             )}
           </div>
         )}
+        
+        {/* ⬇️ No UI changes to cards — same as your original */}
+        {/* Your student cards code goes here, unchanged */}
+        {/* ... */}
       </div>
 
-      {/* Add Student Form */}
+      {/* Add/Edit Forms */}
       {showForm && (
         <StudentForm
           onSubmit={handleAddStudent}
@@ -333,8 +354,6 @@ export default function StudentsManagePage() {
           isLoading={isSubmitting}
         />
       )}
-
-      {/* Edit Student Form */}
       {editingStudent && (
         <StudentForm
           student={editingStudent}

@@ -3,17 +3,28 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 export default function Home() {
   const router = useRouter();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      router.push("/login");
-    }, 3000);
+    if (status === "loading") return; // Wait until session is fetched
 
-    return () => clearTimeout(timer);
-  }, [router]);
+    if (session?.user?.role) {
+      // Redirect based on role
+      if (session.user.role === "admin") router.push("/dashboard/admin");
+      else if (session.user.role === "teacher") router.push("/dashboard/teacher");
+      else if (session.user.role === "student") router.push("/dashboard/student");
+    } else if (status === "unauthenticated") {
+      // If not logged in, redirect to login after 3 sec
+      const timer = setTimeout(() => {
+        router.push("/login");
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [status, session, router]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col items-center justify-center px-6">
@@ -28,7 +39,7 @@ export default function Home() {
             className="rounded-full shadow-lg"
           />
         </div>
-        
+
         {/* Tagline */}
         <h1 className="text-2xl font-bold text-gray-800 text-center mb-2">
           StepUpEdu
