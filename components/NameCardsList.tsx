@@ -1,6 +1,5 @@
 'use client'
 import React, { useState } from 'react';
-import { TrashIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { INameCard } from '@/lib/modals/NameCard';
 
 interface NameCardsListProps {
@@ -35,84 +34,116 @@ const NameCardsList: React.FC<NameCardsListProps> = ({ cards, onCardDeleted }) =
   };
 
   const getPercentageColor = (percentage: number) => {
-    if (percentage >= 90) return 'bg-green-100 text-green-800';
-    if (percentage >= 75) return 'bg-blue-100 text-blue-800';
-    if (percentage >= 60) return 'bg-yellow-100 text-yellow-800';
-    if (percentage >= 40) return 'bg-orange-100 text-orange-800';
-    return 'bg-red-100 text-red-800';
+    if (percentage >= 90) return 'bg-green-100 text-green-800 border-green-200';
+    if (percentage >= 75) return 'bg-blue-100 text-blue-800 border-blue-200';
+    if (percentage >= 60) return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+    if (percentage >= 40) return 'bg-orange-100 text-orange-800 border-orange-200';
+    return 'bg-red-100 text-red-800 border-red-200';
   };
 
   return (
     <>
-      {/* Toggle Button */}
+      {/* Enhanced Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-36 left-6 z-40 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-full shadow-lg p-3 hover:scale-110 transition-all duration-300 flex items-center gap-2"
-        style={{ boxShadow: '0 4px 24px 0 rgba(0,80,120,0.15)' }}
+        className="fixed bottom-24 right-6 z-40 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-full shadow-2xl p-4 hover:scale-110 transition-all duration-300 flex items-center gap-3 group"
+        style={{ boxShadow: '0 8px 32px 0 rgba(59, 130, 246, 0.3)' }}
         aria-label="View Cards"
       >
-        {isOpen ? <EyeSlashIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
-        <span className="hidden sm:inline text-sm font-semibold">
+        <svg className={`w-6 h-6 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+        </svg>
+        <span className="hidden sm:inline text-sm font-semibold pr-1">
           {isOpen ? 'Hide' : 'View'} Cards
         </span>
       </button>
 
-      {/* Modal */}
+      {/* Enhanced Modal */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full mx-4 max-h-[80vh] flex flex-col">
-            <div className="p-6 border-b border-gray-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full mx-4 max-h-[85vh] flex flex-col transform transition-all duration-300 scale-100">
+            <div className="p-6 border-b border-slate-200">
               <div className="flex justify-between items-center">
-                <h3 className="text-2xl font-bold text-gray-800">
-                  Name Cards ({cards.length})
-                </h3>
+                <div className="flex items-center">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center mr-3">
+                    <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-slate-800">
+                      Name Cards
+                    </h3>
+                    <p className="text-slate-600">{cards.length} cards available</p>
+                  </div>
+                </div>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="text-gray-400 hover:text-gray-700 transition-colors"
+                  className="text-slate-400 hover:text-slate-700 transition-colors p-2 hover:bg-slate-100 rounded-lg"
                   aria-label="Close"
                 >
-                  <EyeSlashIcon className="w-6 h-6" />
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
                 </button>
               </div>
             </div>
             
             <div className="flex-1 overflow-y-auto p-6">
               {cards.length === 0 ? (
-                <div className="text-center py-12">
-                  <p className="text-gray-500 text-lg">No name cards found.</p>
-                  <p className="text-gray-400 text-sm mt-2">Add some cards to see them here!</p>
+                <div className="text-center py-16">
+                  <div className="w-20 h-20 bg-gradient-to-br from-slate-100 to-slate-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg className="w-10 h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                    </svg>
+                  </div>
+                  <h4 className="text-xl font-bold text-slate-800 mb-2">No name cards found</h4>
+                  <p className="text-slate-500 mb-6">Add some cards to see them here!</p>
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 font-medium"
+                  >
+                    Add Your First Card
+                  </button>
                 </div>
               ) : (
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                   {cards.map((card) => (
                     <div
                       key={card._id}
-                      className="bg-gray-50 rounded-xl p-4 border border-gray-200 hover:shadow-md transition-shadow"
+                      className="bg-gradient-to-br from-slate-50 to-white rounded-xl p-6 border border-slate-200 hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
                     >
-                      <div className="flex justify-between items-start mb-3">
+                      <div className="flex justify-between items-start mb-4">
                         <div className="flex-1">
-                          <h4 className="font-semibold text-gray-800 truncate">
+                          <h4 className="font-bold text-slate-800 text-lg mb-1 truncate">
                             {card.name}
                           </h4>
-                          <p className="text-sm text-gray-600 truncate">
+                          <p className="text-sm text-slate-600 truncate bg-slate-100 px-2 py-1 rounded-lg inline-block">
                             {card.tag}
                           </p>
                         </div>
                         <button
                           onClick={() => handleDelete(card._id!)}
                           disabled={deletingId === card._id}
-                          className="text-red-500 hover:text-red-700 transition-colors p-1 disabled:opacity-50"
+                          className="text-red-500 hover:text-red-700 transition-colors p-2 hover:bg-red-50 rounded-lg disabled:opacity-50"
                           aria-label="Delete card"
                         >
-                          <TrashIcon className="w-4 h-4" />
+                          {deletingId === card._id ? (
+                            <div className="animate-spin rounded-full h-4 w-4 border-2 border-red-500 border-t-transparent"></div>
+                          ) : (
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          )}
                         </button>
                       </div>
                       
                       <div className="flex justify-between items-center">
-                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${getPercentageColor(card.percentage)}`}>
+                        <span className={`px-4 py-2 rounded-xl text-sm font-bold border ${getPercentageColor(card.percentage)}`}>
                           {card.percentage}%
                         </span>
-                        <span className="text-xs text-gray-400">
+                        <span className="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded-lg">
                           {card.createdAt ? new Date(card.createdAt).toLocaleDateString() : 'N/A'}
                         </span>
                       </div>

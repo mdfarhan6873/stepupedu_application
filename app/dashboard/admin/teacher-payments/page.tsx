@@ -233,70 +233,73 @@ export default function TeacherPaymentManagement() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-emerald-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="relative">
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-emerald-200 border-t-emerald-600 mx-auto"></div>
+            <div className="absolute inset-0 rounded-full h-16 w-16 border-4 border-transparent border-t-emerald-400 animate-spin mx-auto" style={{ animationDelay: '0.15s', animationDuration: '1s' }}></div>
+          </div>
+          <p className="mt-6 text-lg font-medium text-slate-700">Loading payments...</p>
+          <p className="text-sm text-slate-500 mt-1">Please wait while we fetch the data</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-emerald-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
-        {/* Header with Back Button */}
+        {/* Enhanced Header */}
         <div className="mb-6 sm:mb-8">
-          <div className="flex items-center mb-4">
+          <div className="flex items-center mb-6">
             <button
               onClick={() => router.back()}
-              className="mr-4 p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+              className="group flex items-center justify-center w-10 h-10 rounded-xl bg-white/80 backdrop-blur-sm hover:bg-white text-slate-600 hover:text-slate-800 transition-all duration-200 hover:scale-105 shadow-sm mr-4"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
               </svg>
             </button>
             <div className="flex-1">
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Teacher Payments</h1>
-              <p className="text-gray-600 mt-1 text-sm sm:text-base">Manage teacher salary payments and transactions</p>
+              <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+                Teacher
+              </h1>
+              <p className="text-slate-600 mt-1 text-sm sm:text-base">Payments</p>
             </div>
           </div>
           
-          {/* Mobile Add Button */}
-          <div className="sm:hidden mb-4">
+          {/* Enhanced Add Button */}
+          <div className="flex justify-end">
             <button
               onClick={() => setShowForm(true)}
-              className="w-full bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors flex items-center justify-center"
+              className="group relative bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-xl hover:from-emerald-700 hover:to-teal-700 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 flex items-center space-x-2"
             >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 transition-transform group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
               </svg>
-              Add Payment
-            </button>
-          </div>
-          
-          {/* Desktop Add Button */}
-          <div className="hidden sm:flex justify-end">
-            <button
-              onClick={() => setShowForm(true)}
-              className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors flex items-center"
-            >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-              </svg>
-              Add Payment
+              <span className="font-medium">Add Payment</span>
             </button>
           </div>
         </div>
 
-        {/* Filters */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-          <div className="flex flex-wrap items-center gap-4 mb-4">
+        {/* Enhanced Filters */}
+        <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-6 mb-8">
+          <div className="flex flex-wrap items-center gap-4 mb-6">
             <div className="flex-1 min-w-64">
-              <input
-                type="text"
-                placeholder="Search by teacher name, mobile, subject, or receipt no..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              />
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg className="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search by teacher name, mobile, subject, or receipt no..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white/80 backdrop-blur-sm transition-all duration-200"
+                />
+              </div>
             </div>
           </div>
 
@@ -305,7 +308,7 @@ export default function TeacherPaymentManagement() {
             <select
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white/80 backdrop-blur-sm transition-all duration-200"
             >
               <option value="">All Months</option>
               {months.map(month => (
@@ -317,7 +320,7 @@ export default function TeacherPaymentManagement() {
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white/80 backdrop-blur-sm transition-all duration-200"
             >
               <option value="">All Years</option>
               {uniqueYears.map(year => (
@@ -329,7 +332,7 @@ export default function TeacherPaymentManagement() {
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white/80 backdrop-blur-sm transition-all duration-200"
             >
               <option value="">All Status</option>
               <option value="Completed">Completed</option>
@@ -341,77 +344,103 @@ export default function TeacherPaymentManagement() {
             {/* Clear Filters Button */}
             <button
               onClick={clearFilters}
-              className="px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+              className="px-6 py-3 text-slate-600 hover:text-slate-800 hover:bg-white/60 rounded-xl transition-all duration-200 font-medium"
             >
               Clear All
             </button>
           </div>
 
-          {/* Results Summary */}
-          <div className="mt-4 text-sm text-gray-600">
-            Showing {filteredPayments.length} of {payments.length} payments
-            {filteredPayments.length > 0 && (
-              <span className="ml-4 font-medium">
-                Total Amount: {formatAmount(filteredPayments.reduce((sum, p) => sum + p.amount, 0))}
-              </span>
+          {/* Enhanced Results Summary */}
+          <div className="mt-6 flex items-center justify-between">
+            <div className="text-sm text-slate-600">
+              <span className="font-medium text-slate-800">{filteredPayments.length}</span> payments found
+              {filteredPayments.length > 0 && (
+                <span className="ml-4 font-semibold text-emerald-600">
+                  Total: {formatAmount(filteredPayments.reduce((sum, p) => sum + p.amount, 0))}
+                </span>
+              )}
+            </div>
+            {(searchTerm || selectedMonth || selectedYear || selectedStatus) && (
+              <button
+                onClick={clearFilters}
+                className="text-sm text-emerald-600 hover:text-emerald-800 font-medium transition-colors duration-200"
+              >
+                Clear filters
+              </button>
             )}
           </div>
         </div>
 
-        {/* Payments Table */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        {/* Enhanced Payments Table */}
+        <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 overflow-hidden">
           {currentPayments.length === 0 ? (
-            <div className="text-center py-12">
-              <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-              </svg>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No payments found</h3>
-              <p className="text-gray-500">Try adjusting your search criteria or add a new payment.</p>
+            <div className="text-center py-16">
+              <div className="relative">
+                <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full flex items-center justify-center">
+                  <svg className="w-12 h-12 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                  </svg>
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-slate-800 mb-2">No payments found</h3>
+              <p className="text-slate-600 mb-8 max-w-md mx-auto">
+                {(searchTerm || selectedMonth || selectedYear || selectedStatus)
+                  ? 'Try adjusting your search criteria to find more payments.'
+                  : 'Get started by adding your first teacher payment record.'}
+              </p>
+              {!(searchTerm || selectedMonth || selectedYear || selectedStatus) && (
+                <button
+                  onClick={() => setShowForm(true)}
+                  className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-3 rounded-xl hover:from-emerald-700 hover:to-teal-700 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 font-medium"
+                >
+                  Add Your First Payment
+                </button>
+              )}
             </div>
           ) : (
             <>
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
+                <table className="min-w-full divide-y divide-slate-200">
+                  <thead className="bg-slate-50/80 backdrop-blur-sm">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teacher</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Receipt No</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Method</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                      <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Teacher</th>
+                      <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Receipt No</th>
+                      <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Amount</th>
+                      <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Type</th>
+                      <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Method</th>
+                      <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Date</th>
+                      <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="bg-white/50 backdrop-blur-sm divide-y divide-slate-200">
                     {currentPayments.map((payment) => (
-                      <tr key={payment._id} className="hover:bg-gray-50">
+                      <tr key={payment._id} className="hover:bg-white/80 transition-colors duration-200">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div>
-                            <div className="text-sm font-medium text-gray-900">{payment.teacherId.name}</div>
-                            <div className="text-sm text-gray-500">
+                            <div className="text-sm font-semibold text-slate-900">{payment.teacherId.name}</div>
+                            <div className="text-sm text-slate-500">
                               {payment.teacherId.subject} | {payment.teacherId.mobileNo}
                             </div>
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900 font-mono">{payment.receiptNumber}</div>
+                          <div className="text-sm text-slate-900 font-mono bg-slate-100 px-2 py-1 rounded">{payment.receiptNumber}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900">{formatAmount(payment.amount)}</div>
+                          <div className="text-sm font-bold text-emerald-600">{formatAmount(payment.amount)}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{payment.paymentType}</div>
+                          <div className="text-sm text-slate-900">{payment.paymentType}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{payment.paymentMethod}</div>
+                          <div className="text-sm text-slate-900">{payment.paymentMethod}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{formatDate(payment.paymentDate)}</div>
+                          <div className="text-sm text-slate-900">{formatDate(payment.paymentDate)}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                          <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
                             payment.status === 'Completed' ? 'bg-green-100 text-green-800' :
                             payment.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
                             payment.status === 'Failed' ? 'bg-red-100 text-red-800' :
@@ -421,16 +450,16 @@ export default function TeacherPaymentManagement() {
                             {payment.status}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-3">
                           <button
                             onClick={() => openEditForm(payment)}
-                            className="text-indigo-600 hover:text-indigo-900 transition-colors"
+                            className="text-emerald-600 hover:text-emerald-800 transition-colors duration-200 font-medium"
                           >
                             Edit
                           </button>
                           <button
                             onClick={() => handleDeletePayment(payment._id)}
-                            className="text-red-600 hover:text-red-900 transition-colors"
+                            className="text-red-600 hover:text-red-800 transition-colors duration-200 font-medium"
                           >
                             Delete
                           </button>
@@ -441,39 +470,39 @@ export default function TeacherPaymentManagement() {
                 </table>
               </div>
 
-              {/* Pagination */}
+              {/* Enhanced Pagination */}
               {totalPages > 1 && (
-                <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                <div className="bg-white/60 backdrop-blur-sm px-4 py-4 flex items-center justify-between border-t border-slate-200 sm:px-6">
                   <div className="flex-1 flex justify-between sm:hidden">
                     <button
                       onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                       disabled={currentPage === 1}
-                      className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="relative inline-flex items-center px-4 py-2 border border-slate-300 text-sm font-medium rounded-lg text-slate-700 bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                     >
                       Previous
                     </button>
                     <button
                       onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                       disabled={currentPage === totalPages}
-                      className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="ml-3 relative inline-flex items-center px-4 py-2 border border-slate-300 text-sm font-medium rounded-lg text-slate-700 bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                     >
                       Next
                     </button>
                   </div>
                   <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                     <div>
-                      <p className="text-sm text-gray-700">
+                      <p className="text-sm text-slate-700">
                         Showing <span className="font-medium">{startIndex + 1}</span> to{' '}
                         <span className="font-medium">{Math.min(endIndex, filteredPayments.length)}</span> of{' '}
                         <span className="font-medium">{filteredPayments.length}</span> results
                       </p>
                     </div>
                     <div>
-                      <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                      <nav className="relative z-0 inline-flex rounded-lg shadow-sm -space-x-px">
                         <button
                           onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                           disabled={currentPage === 1}
-                          className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="relative inline-flex items-center px-3 py-2 rounded-l-lg border border-slate-300 bg-white text-sm font-medium text-slate-500 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                         >
                           Previous
                         </button>
@@ -483,10 +512,10 @@ export default function TeacherPaymentManagement() {
                             <button
                               key={page}
                               onClick={() => setCurrentPage(page)}
-                              className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
+                              className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium transition-all duration-200 ${
                                 currentPage === page
-                                  ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
-                                  : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+                                  ? 'z-10 bg-emerald-50 border-emerald-500 text-emerald-600'
+                                  : 'bg-white border-slate-300 text-slate-500 hover:bg-slate-50'
                               }`}
                             >
                               {page}
@@ -496,7 +525,7 @@ export default function TeacherPaymentManagement() {
                         <button
                           onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                           disabled={currentPage === totalPages}
-                          className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="relative inline-flex items-center px-3 py-2 rounded-r-lg border border-slate-300 bg-white text-sm font-medium text-slate-500 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                         >
                           Next
                         </button>
@@ -510,7 +539,7 @@ export default function TeacherPaymentManagement() {
         </div>
       </div>
 
-      {/* Payment Form Modal */}
+      {/* Payment Form Modal remains unchanged */}
       {showForm && (
         <TeacherPaymentForm
           payment={editingPayment ? {

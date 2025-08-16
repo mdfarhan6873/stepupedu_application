@@ -302,28 +302,42 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
       {/* Top Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="px-4 sm:px-6 lg:px-8">
+      <div className="bg-white/80 backdrop-blur-md shadow-lg border-b border-white/20 sticky top-0 z-40">
+        <div className="px-4 sm:px-6">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
-              <Image
-                src="/logo.png"
-                alt="StepUpEdu Logo"
-                width={40}
-                height={40}
-                className="rounded-full"
-              />
-
+            <div className="flex items-center space-x-3">
+              <div className="relative">
+                <Image
+                  src="/logo.png"
+                  alt="StepUpEdu Logo"
+                  width={44}
+                  height={44}
+                  className="rounded-full shadow-lg border-2 border-white/50"
+                />
+                <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-white/20 to-transparent"></div>
+              </div>
+              <div>
+                <h1 className="text-lg font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                  Admin Dashboard
+                </h1>
+                <p className="text-xs text-gray-500">StepUpEdu Management</p>
+              </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-gray-700 font-medium">Welcome, {session?.user?.name}</span>
+            <div className="flex items-center space-x-3">
+              <div className="hidden sm:block text-right">
+                <p className="text-sm font-semibold text-gray-800">Welcome back!</p>
+                <p className="text-xs text-gray-500">{session?.user?.name}</p>
+              </div>
               <button
                 onClick={() => signOut({ callbackUrl: "/login" })}
-                className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
+                className="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-2xl text-sm font-semibold hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
               >
-                Sign Out
+                <svg className="w-4 h-4 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <span className="hidden sm:inline">Sign Out</span>
               </button>
             </div>
           </div>
@@ -331,145 +345,140 @@ export default function AdminDashboard() {
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 pb-24">
-        <div className="">
-          
-          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl p-6 text-white mb-8">
-            {/* Dashboard Statistics */}
-            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              {/* Total Students */}
-              <div className="bg-white p-4 rounded-xl shadow-md border border-gray-100">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Total Students</p>
-                    <div className="text-2xl font-bold text-gray-900">
-                      {statsLoading ? (
-                        <span className="inline-block animate-pulse bg-gray-200 h-8 w-12 rounded"></span>
-                      ) : (
-                        stats.totalStudents.toLocaleString()
-                      )}
-                    </div>
-                  </div>
-                  <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-.5a4 4 0 110-5.292M15 21H3v-1a6 6 0 0112 0v1z"
-                      />
-                    </svg>
-                  </div>
+      <main className="flex-1 pb-24 px-4 sm:px-6">
+        {/* Welcome Section */}
+        <div className="pt-6 pb-4">
+          <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 rounded-3xl p-6 text-white shadow-2xl relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent"></div>
+            <div className="relative z-10">
+              <h2 className="text-2xl font-bold mb-2">Dashboard Overview</h2>
+              <p className="text-indigo-100 text-sm">Monitor your educational platform performance</p>
+            </div>
+            <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/10 rounded-full"></div>
+            <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-white/5 rounded-full"></div>
+          </div>
+        </div>
+
+        {/* Dashboard Statistics */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          {/* Total Students */}
+          <div className="bg-white/70 backdrop-blur-sm p-5 rounded-3xl shadow-xl border border-white/50 hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Students</p>
+                <div className="text-2xl font-bold text-gray-900 mt-1">
+                  {statsLoading ? (
+                    <span className="inline-block animate-pulse bg-gray-200 h-8 w-12 rounded-lg"></span>
+                  ) : (
+                    stats.totalStudents.toLocaleString()
+                  )}
                 </div>
               </div>
-
-              {/* Total Teachers */}
-              <div className="bg-white p-4 rounded-xl shadow-md border border-gray-100">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Total Teachers</p>
-                    <div className="text-2xl font-bold text-gray-900">
-                      {statsLoading ? (
-                        <span className="inline-block animate-pulse bg-gray-200 h-8 w-12 rounded"></span>
-                      ) : (
-                        stats.totalTeachers.toLocaleString()
-                      )}
-                    </div>
-                  </div>
-                  <div className="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              {/* Total Revenue */}
-              <div className="bg-white p-4 rounded-xl shadow-md border border-gray-100">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Total Revenue</p>
-                    <div className="text-2xl font-bold text-gray-900">
-                      {statsLoading ? (
-                        <span className="inline-block animate-pulse bg-gray-200 h-8 w-16 rounded"></span>
-                      ) : (
-                        `₹${stats.totalRevenue.toLocaleString()}`
-                      )}
-                    </div>
-                  </div>
-                  <div className="w-12 h-12 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              {/* Total Profit */}
-              <div className="bg-white p-4 rounded-xl shadow-md border border-gray-100">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Net Profit</p>
-                    <div
-                      className={`text-2xl font-bold ${stats.totalProfit >= 0 ? "text-green-600" : "text-red-600"
-                        }`}
-                    >
-                      {statsLoading ? (
-                        <span className="inline-block animate-pulse bg-gray-200 h-8 w-16 rounded"></span>
-                      ) : (
-                        `₹${stats.totalProfit.toLocaleString()}`
-                      )}
-                    </div>
-                  </div>
-                  <div
-                    className={`w-12 h-12 rounded-full flex items-center justify-center ${stats.totalProfit >= 0
-                      ? "bg-green-100 text-green-600"
-                      : "bg-red-100 text-red-600"
-                      }`}
-                  >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d={
-                          stats.totalProfit >= 0
-                            ? "M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                            : "M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"
-                        }
-                      />
-                    </svg>
-                  </div>
-                </div>
+              <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-2xl flex items-center justify-center shadow-lg">
+                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-.5a4 4 0 110-5.292M15 21H3v-1a6 6 0 0112 0v1z" />
+                </svg>
               </div>
             </div>
           </div>
 
+          {/* Total Teachers */}
+          <div className="bg-white/70 backdrop-blur-sm p-5 rounded-3xl shadow-xl border border-white/50 hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Teachers</p>
+                <div className="text-2xl font-bold text-gray-900 mt-1">
+                  {statsLoading ? (
+                    <span className="inline-block animate-pulse bg-gray-200 h-8 w-12 rounded-lg"></span>
+                  ) : (
+                    stats.totalTeachers.toLocaleString()
+                  )}
+                </div>
+              </div>
+              <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-2xl flex items-center justify-center shadow-lg">
+                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </div>
+            </div>
+          </div>
 
+          {/* Total Revenue */}
+          <div className="bg-white/70 backdrop-blur-sm p-5 rounded-3xl shadow-xl border border-white/50 hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Revenue</p>
+                <div className="text-2xl font-bold text-gray-900 mt-1">
+                  {statsLoading ? (
+                    <span className="inline-block animate-pulse bg-gray-200 h-8 w-16 rounded-lg"></span>
+                  ) : (
+                    `₹${stats.totalRevenue.toLocaleString()}`
+                  )}
+                </div>
+              </div>
+              <div className="w-14 h-14 bg-gradient-to-br from-yellow-500 to-orange-500 text-white rounded-2xl flex items-center justify-center shadow-lg">
+                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                </svg>
+              </div>
+            </div>
+          </div>
 
+          {/* Total Profit */}
+          <div className="bg-white/70 backdrop-blur-sm p-5 rounded-3xl shadow-xl border border-white/50 hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Net Profit</p>
+                <div className={`text-2xl font-bold mt-1 ${stats.totalProfit >= 0 ? "text-green-600" : "text-red-600"}`}>
+                  {statsLoading ? (
+                    <span className="inline-block animate-pulse bg-gray-200 h-8 w-16 rounded-lg"></span>
+                  ) : (
+                    `₹${stats.totalProfit.toLocaleString()}`
+                  )}
+                </div>
+              </div>
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg ${stats.totalProfit >= 0 ? "bg-gradient-to-br from-green-500 to-green-600 text-white" : "bg-gradient-to-br from-red-500 to-red-600 text-white"}`}>
+                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={stats.totalProfit >= 0 ? "M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" : "M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"} />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
 
-          {/* Management Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {managementIcons.map((item, index) => (
+        {/* Quick Actions Section */}
+        <div className="mb-6">
+          <h3 className="text-lg font-bold text-gray-800 mb-4 px-2">Quick Actions</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {managementIcons.slice(0, 8).map((item, index) => (
               <button
                 key={index}
                 onClick={() => router.push(item.href)}
-                className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1 border border-gray-100"
+                className="bg-white/70 backdrop-blur-sm p-5 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-white/50 group"
               >
-                <div className={`w-16 h-16 ${item.color} rounded-full flex items-center justify-center mx-auto mb-4`}>
+                <div className={`w-14 h-14 ${item.color.replace('bg-', 'bg-gradient-to-br from-').replace('text-', 'to-')} rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg group-hover:scale-110 transition-transform duration-200`}>
                   {item.icon}
                 </div>
-                <h3 className="text-sm font-semibold text-gray-900 text-center">{item.name}</h3>
+                <h3 className="text-xs font-semibold text-gray-800 text-center leading-tight">{item.name}</h3>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* More Options Section */}
+        <div className="mb-6">
+          <h3 className="text-lg font-bold text-gray-800 mb-4 px-2">More Options</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {managementIcons.slice(8).map((item, index) => (
+              <button
+                key={index + 8}
+                onClick={() => router.push(item.href)}
+                className="bg-white/70 backdrop-blur-sm p-5 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-white/50 group"
+              >
+                <div className={`w-14 h-14 ${item.color.replace('bg-', 'bg-gradient-to-br from-').replace('text-', 'to-')} rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg group-hover:scale-110 transition-transform duration-200`}>
+                  {item.icon}
+                </div>
+                <h3 className="text-xs font-semibold text-gray-800 text-center leading-tight">{item.name}</h3>
               </button>
             ))}
           </div>
@@ -477,118 +486,145 @@ export default function AdminDashboard() {
       </main>
 
       {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 rounded-t-3xl">
+      <div className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-white/20 px-4 py-3 rounded-t-3xl shadow-2xl">
         <div className="flex justify-around items-center max-w-md mx-auto">
           {/* Home */}
           <button
             onClick={() => router.push('/dashboard/admin')}
-            className="flex flex-col items-center space-y-1 p-2 rounded-lg bg-indigo-100 text-indigo-600"
+            className="flex flex-col items-center space-y-1 p-3 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg transform hover:scale-105 transition-all duration-200"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
-            <span className="text-xs font-medium">Home</span>
+            <span className="text-xs font-semibold">Home</span>
           </button>
 
           {/* Quick Add */}
           <div className="relative">
             <button
               onClick={() => setShowQuickAddMenu(!showQuickAddMenu)}
-              className="flex flex-col items-center space-y-1 p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+              className="flex flex-col items-center space-y-1 p-3 rounded-2xl text-gray-600 hover:bg-gray-100 transition-all duration-200 transform hover:scale-105"
             >
-              <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center shadow-lg">
                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
               </div>
-              <span className="text-xs font-medium">Add</span>
+              <span className="text-xs font-semibold">Add</span>
             </button>
 
             {/* Quick Add Menu */}
             {showQuickAddMenu && (
-              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-white rounded-lg shadow-lg border py-2 min-w-[180px] max-h-80 overflow-y-auto">
+              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-4 bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/50 py-3 min-w-[200px] max-h-80 overflow-y-auto">
+                <div className="px-4 py-2 border-b border-gray-100">
+                  <h3 className="text-sm font-bold text-gray-800">Quick Add</h3>
+                </div>
                 <button
                   onClick={() => {
                     setQuickAddModal('student');
                     setShowQuickAddMenu(false);
                   }}
-                  className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+                  className="w-full text-left px-4 py-3 hover:bg-indigo-50 text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
                 >
-                  Add Student
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                    </div>
+                    <span>Add Student</span>
+                  </div>
                 </button>
                 <button
                   onClick={() => {
                     setQuickAddModal('teacher');
                     setShowQuickAddMenu(false);
                   }}
-                  className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+                  className="w-full text-left px-4 py-3 hover:bg-indigo-50 text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
                 >
-                  Add Teacher
-                </button>
-                <button
-                  onClick={() => {
-                    setQuickAddModal('studentWhatsapp');
-                    setShowQuickAddMenu(false);
-                  }}
-                  className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-                >
-                  Student WhatsApp Group
-                </button>
-                <button
-                  onClick={() => {
-                    setQuickAddModal('teacherWhatsapp');
-                    setShowQuickAddMenu(false);
-                  }}
-                  className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-                >
-                  Teacher WhatsApp Group
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-green-100 text-green-600 rounded-xl flex items-center justify-center">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                      </svg>
+                    </div>
+                    <span>Add Teacher</span>
+                  </div>
                 </button>
                 <button
                   onClick={() => {
                     setQuickAddModal('notes');
                     setShowQuickAddMenu(false);
                   }}
-                  className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+                  className="w-full text-left px-4 py-3 hover:bg-indigo-50 text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
                 >
-                  Add Note
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-yellow-100 text-yellow-600 rounded-xl flex items-center justify-center">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                    </div>
+                    <span>Add Note</span>
+                  </div>
                 </button>
                 <button
                   onClick={() => {
                     setQuickAddModal('schedule');
                     setShowQuickAddMenu(false);
                   }}
-                  className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+                  className="w-full text-left px-4 py-3 hover:bg-indigo-50 text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
                 >
-                  Create Schedule
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <span>Create Schedule</span>
+                  </div>
                 </button>
                 <button
                   onClick={() => {
                     setQuickAddModal('result');
                     setShowQuickAddMenu(false);
                   }}
-                  className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+                  className="w-full text-left px-4 py-3 hover:bg-indigo-50 text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
                 >
-                  Add Result
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-red-100 text-red-600 rounded-xl flex items-center justify-center">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                      </svg>
+                    </div>
+                    <span>Add Result</span>
+                  </div>
                 </button>
                 <button
                   onClick={() => {
                     setQuickAddModal('notification');
                     setShowQuickAddMenu(false);
                   }}
-                  className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+                  className="w-full text-left px-4 py-3 hover:bg-indigo-50 text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
                 >
-                  Send Notification
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-pink-100 text-pink-600 rounded-xl flex items-center justify-center">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                      </svg>
+                    </div>
+                    <span>Send Notification</span>
+                  </div>
                 </button>
               </div>
             )}
           </div>
 
           {/* Messages/Enquiry */}
-          <button className="flex flex-col items-center space-y-1 p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">
+          <button className="flex flex-col items-center space-y-1 p-3 rounded-2xl text-gray-600 hover:bg-gray-100 transition-all duration-200 transform hover:scale-105">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
-            <span className="text-xs font-medium">Messages</span>
+            <span className="text-xs font-semibold">Messages</span>
           </button>
         </div>
       </div>

@@ -1,6 +1,5 @@
 'use client'
 import React, { useState } from 'react';
-import { PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 interface AddNameCardFormProps {
   onCardAdded: () => void;
@@ -67,40 +66,55 @@ const AddNameCardForm: React.FC<AddNameCardFormProps> = ({ onCardAdded }) => {
 
   return (
     <>
-      {/* Add Button */}
+      {/* Enhanced Add Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-20 left-6 z-40 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-full shadow-lg p-3 hover:scale-110 transition-all duration-300 flex items-center gap-2"
-        style={{ boxShadow: '0 4px 24px 0 rgba(0,120,80,0.15)' }}
+        className="fixed bottom-6 right-6 z-40 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-full shadow-2xl p-4 hover:scale-110 transition-all duration-300 flex items-center gap-3 group"
+        style={{ boxShadow: '0 8px 32px 0 rgba(16, 185, 129, 0.3)' }}
         aria-label="Add Name Card"
       >
-        <PlusIcon className="w-5 h-5" />
-        <span className="hidden sm:inline text-sm font-semibold">Add Card</span>
+        <svg className="w-6 h-6 transition-transform group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+        </svg>
+        <span className="hidden sm:inline text-sm font-semibold pr-1">Add Card</span>
       </button>
 
-      {/* Modal */}
+      {/* Enhanced Modal */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 relative transform transition-all duration-300 scale-100">
             <button
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors"
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 transition-colors p-1 hover:bg-slate-100 rounded-lg"
               onClick={handleClose}
               aria-label="Close"
             >
-              <XMarkIcon className="w-6 h-6" />
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
             </button>
             
-            <h3 className="text-2xl font-bold mb-6 text-gray-800">Add Name Card</h3>
+            <div className="mb-6">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold text-slate-800">Add Name Card</h3>
+              <p className="text-slate-600 mt-1">Create a new name card with details</p>
+            </div>
             
             {error && (
-              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl flex items-center">
+                <svg className="w-5 h-5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
                 {error}
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="name" className="block text-sm font-semibold text-slate-700 mb-2">
                   Name *
                 </label>
                 <input
@@ -111,13 +125,13 @@ const AddNameCardForm: React.FC<AddNameCardFormProps> = ({ onCardAdded }) => {
                   onChange={handleInputChange}
                   required
                   maxLength={50}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-slate-50 transition-all duration-200"
                   placeholder="Enter name"
                 />
               </div>
 
               <div>
-                <label htmlFor="tag" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="tag" className="block text-sm font-semibold text-slate-700 mb-2">
                   Tag *
                 </label>
                 <input
@@ -128,13 +142,13 @@ const AddNameCardForm: React.FC<AddNameCardFormProps> = ({ onCardAdded }) => {
                   onChange={handleInputChange}
                   required
                   maxLength={30}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-slate-50 transition-all duration-200"
                   placeholder="Enter tag (e.g., Student, Teacher)"
                 />
               </div>
 
               <div>
-                <label htmlFor="percentage" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="percentage" className="block text-sm font-semibold text-slate-700 mb-2">
                   Percentage *
                 </label>
                 <input
@@ -146,7 +160,7 @@ const AddNameCardForm: React.FC<AddNameCardFormProps> = ({ onCardAdded }) => {
                   required
                   min="0"
                   max="100"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-slate-50 transition-all duration-200"
                   placeholder="Enter percentage (0-100)"
                 />
               </div>
@@ -155,16 +169,23 @@ const AddNameCardForm: React.FC<AddNameCardFormProps> = ({ onCardAdded }) => {
                 <button
                   type="button"
                   onClick={handleClose}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex-1 px-6 py-3 border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition-all duration-200 font-medium"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium shadow-lg"
                 >
-                  {isSubmitting ? 'Adding...' : 'Add Card'}
+                  {isSubmitting ? (
+                    <div className="flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
+                      Adding...
+                    </div>
+                  ) : (
+                    'Add Card'
+                  )}
                 </button>
               </div>
             </form>
