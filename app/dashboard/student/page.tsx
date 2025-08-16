@@ -33,7 +33,7 @@ export default function StudentDashboard() {
 
   if (status === "loading") {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600 mx-auto"></div>
           <p className="mt-4 text-lg text-gray-600">Loading...</p>
@@ -45,12 +45,48 @@ export default function StudentDashboard() {
   if (!session || session.user.role !== "student") return null;
 
   const dashboardItems = [
-    { name: "Schedule", icon: CalendarIcon, href: "/dashboard/student/schedule" },
-    { name: "My Payments", icon: CurrencyDollarIcon, href: "/dashboard/student/payments" },
-    { name: "My Attendance", icon: ClipboardDocumentIcon, href: "/dashboard/student/attendance" },
-    { name: "Notes", icon: BookOpenIcon, href: "/dashboard/student/notes" },
-    { name: "Results", icon: ChartBarIcon, href: "/dashboard/student/results" },
-    { name: "Assignments", icon: ClipboardDocumentListIcon, href: "/dashboard/student/assignments" },
+    { 
+      name: "Schedule", 
+      icon: CalendarIcon, 
+      href: "/dashboard/student/schedule",
+      color: "bg-purple-100 text-purple-600",
+      gradient: "from-purple-500 to-purple-600"
+    },
+    { 
+      name: "My Payments", 
+      icon: CurrencyDollarIcon, 
+      href: "/dashboard/student/payments",
+      color: "bg-green-100 text-green-600",
+      gradient: "from-green-500 to-green-600"
+    },
+    { 
+      name: "My Attendance", 
+      icon: ClipboardDocumentIcon, 
+      href: "/dashboard/student/attendance",
+      color: "bg-blue-100 text-blue-600",
+      gradient: "from-blue-500 to-blue-600"
+    },
+    { 
+      name: "Notes", 
+      icon: BookOpenIcon, 
+      href: "/dashboard/student/notes",
+      color: "bg-yellow-100 text-yellow-600",
+      gradient: "from-yellow-500 to-yellow-600"
+    },
+    { 
+      name: "Results", 
+      icon: ChartBarIcon, 
+      href: "/dashboard/student/results",
+      color: "bg-red-100 text-red-600",
+      gradient: "from-red-500 to-red-600"
+    },
+    { 
+      name: "Assignments", 
+      icon: ClipboardDocumentListIcon, 
+      href: "/dashboard/student/assignments",
+      color: "bg-indigo-100 text-indigo-600",
+      gradient: "from-indigo-500 to-indigo-600"
+    },
   ];
 
   const bottomNavItems = [
@@ -60,59 +96,102 @@ export default function StudentDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Header */}
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+      {/* Top Header */}
+      <div className="bg-white/80 backdrop-blur-md shadow-lg border-b border-white/20 sticky top-0 z-40">
+        <div className="px-4 sm:px-6">
           <div className="flex justify-between items-center h-16">
-            <div className="flex-shrink-0 flex items-center gap-2">
-              <Image src="/logo.png" alt="StepUpEdu Logo" width={40} height={40} className="rounded-full" />
-              <h1 className="text-xl font-bold text-gray-800 hidden md:block">Student Dashboard</h1>
+            <div className="flex items-center space-x-3">
+              <div className="relative">
+                <Image
+                  src="/logo.png"
+                  alt="StepUpEdu Logo"
+                  width={44}
+                  height={44}
+                  className="rounded-full shadow-lg border-2 border-white/50"
+                />
+                <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-white/20 to-transparent"></div>
+              </div>
+              <div>
+                <h1 className="text-lg font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                  Student Dashboard
+                </h1>
+                <p className="text-xs text-gray-500">StepUpEdu Learning Portal</p>
+              </div>
             </div>
-            <div className="flex items-center">
-              <span className="mr-4 text-gray-700">Welcome, {session?.user?.name}</span>
+            <div className="flex items-center space-x-3">
+              <div className="hidden sm:block text-right">
+                <p className="text-sm font-semibold text-gray-800">Welcome back!</p>
+                <p className="text-xs text-gray-500">{session?.user?.name}</p>
+              </div>
               <button
                 onClick={() => signOut({ callbackUrl: "/login" })}
-                className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-2xl text-sm font-semibold hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
               >
-                Sign Out
+                <svg className="w-4 h-4 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <span className="hidden sm:inline">Sign Out</span>
               </button>
             </div>
           </div>
         </div>
-      </nav>
+      </div>
 
-      {/* Main Dashboard */}
-      <main className="flex-1 py-6 px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4">
-          {dashboardItems.map((item) => (
-            <div
-              key={item.name}
-              onClick={() => router.push(item.href)}
-              className="flex flex-col items-center justify-center p-4 bg-white rounded-lg shadow hover:shadow-lg cursor-pointer transition"
-            >
-              <item.icon className="w-10 h-10 text-indigo-600 mb-2" />
-              <span className="text-gray-800 font-medium">{item.name}</span>
+      {/* Main Content */}
+      <main className="flex-1 pb-24 px-4 sm:px-6">
+        {/* Welcome Section */}
+        <div className="pt-6 pb-4">
+          <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 rounded-3xl p-6 text-white shadow-2xl relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent"></div>
+            <div className="relative z-10">
+              <h2 className="text-2xl font-bold mb-2">Learning Portal</h2>
+              <p className="text-indigo-100 text-sm">Access your courses, track progress, and stay connected</p>
             </div>
-          ))}
+            <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/10 rounded-full"></div>
+            <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-white/5 rounded-full"></div>
+          </div>
+        </div>
+
+        {/* Dashboard Items */}
+        <div className="mb-6">
+          <h3 className="text-lg font-bold text-gray-800 mb-4 px-2">Quick Access</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4">
+            {dashboardItems.map((item) => (
+              <div
+                key={item.name}
+                onClick={() => router.push(item.href)}
+                className="bg-white/70 backdrop-blur-sm p-5 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-white/50 group cursor-pointer"
+              >
+                <div className={`w-14 h-14 bg-gradient-to-br ${item.gradient} text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg group-hover:scale-110 transition-transform duration-200`}>
+                  <item.icon className="w-7 h-7" />
+                </div>
+                <h3 className="text-xs font-semibold text-gray-800 text-center leading-tight">{item.name}</h3>
+              </div>
+            ))}
+          </div>
         </div>
       </main>
 
       {/* Bottom Navigation */}
-      <footer className="bg-white shadow-inner md:hidden">
-        <div className="flex justify-around items-center h-16">
-          {bottomNavItems.map((item) => (
+      <div className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-white/20 px-4 py-3 rounded-t-3xl shadow-2xl md:hidden">
+        <div className="flex justify-around items-center max-w-md mx-auto">
+          {bottomNavItems.map((item, index) => (
             <button
               key={item.name}
               onClick={() => router.push(item.href)}
-              className="flex flex-col items-center justify-center text-gray-600 hover:text-indigo-600 transition"
+              className={`flex flex-col items-center space-y-1 p-3 rounded-2xl transition-all duration-200 transform hover:scale-105 ${
+                index === 0 
+                  ? "bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg" 
+                  : "text-gray-600 hover:bg-gray-100"
+              }`}
             >
               <item.icon className="w-6 h-6" />
-              <span className="text-xs mt-1">{item.name}</span>
+              <span className="text-xs font-semibold">{item.name}</span>
             </button>
           ))}
         </div>
-      </footer>
+      </div>
     </div>
   );
 }
