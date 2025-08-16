@@ -237,9 +237,9 @@ const OtherPaymentsPage = () => {
               </button>
               <div>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
-                  Other Payments
+                  Other
                 </h1>
-                <p className="text-sm text-slate-500 mt-1">Manage miscellaneous payments and expenses</p>
+                <p className="text-sm text-slate-500 mt-1">Payments</p>
               </div>
             </div>
             <button

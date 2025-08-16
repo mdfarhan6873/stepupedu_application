@@ -5,6 +5,7 @@ import EnquiriesManager from '@/components/EnquiriesManager'
 import NameCardsList from '@/components/NameCardsList'
 import { INameCard } from '@/lib/modals/NameCard'
 import React, { useEffect, useState } from 'react'
+import Link from 'next/link'
 
 const SettingsPage = () => {
   const router = useRouter()
@@ -100,6 +101,7 @@ const SettingsPage = () => {
             </div>
           </div>
 
+          <Link href='/dashboard/admin/location'>
           <div className="bg-white/70 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/20">
             <div className="flex items-center">
               <div className="flex-shrink-0">
@@ -110,11 +112,12 @@ const SettingsPage = () => {
                 </div>
               </div>
               <div className="ml-4">
-                <p className="text-sm font-medium text-slate-600">Enquiries</p>
+                <p className="text-sm font-medium text-slate-600">Institute Locations</p>
                 <p className="text-2xl font-bold text-slate-800">Manage</p>
               </div>
             </div>
           </div>
+          </Link>
         </div>
 
         {/* Management Cards */}

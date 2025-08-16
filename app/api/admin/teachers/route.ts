@@ -10,15 +10,15 @@ export async function GET() {
     const session = await auth();
     
     if (!session || session.user.role !== "admin") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
     }
 
     await connectToDatabase();
     const teachers = await Teacher.find({}).sort({ createdAt: -1 });
-    return NextResponse.json(teachers);
+    return NextResponse.json({ success: true, data: teachers });
   } catch (error) {
     console.error("Error fetching teachers:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json({ success: false, message: "Internal server error" }, { status: 500 });
   }
 }
 

@@ -51,7 +51,7 @@ const OtherPaymentSchema: Schema = new Schema({
 // Create indexes for better performance
 OtherPaymentSchema.index({ personId: 1 });
 OtherPaymentSchema.index({ date: -1 });
-OtherPaymentSchema.index({ receiptNo: 1 });
+// receiptNo index is automatically created by unique: true constraint
 
 // Generate receipt number before saving
 OtherPaymentSchema.pre('save', async function(next) {

@@ -136,7 +136,7 @@ export default function NotesPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
                 </svg>
               </button>
-              <h1 className="text-xl font-semibold text-gray-900">Notes Management</h1>
+              <h1 className="text-xl font-semibold text-gray-900">Notes</h1>
             </div>
             <button
               onClick={() => setShowForm(true)}
