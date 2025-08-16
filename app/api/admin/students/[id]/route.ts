@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/db';
 import Student from '@/lib/modals/student';
+import bcrypt from 'bcryptjs';
 
 export async function GET(
   request: NextRequest,
@@ -101,9 +102,9 @@ export async function PUT(
       address: address.trim()
     };
 
-    // Only update password if provided
+    // Only update password if provided and hash it
     if (password && password.trim()) {
-      updateData.password = password.trim();
+      updateData.password = await bcrypt.hash(password.trim(), 12);
     }
 
     const updatedStudent = await Student.findByIdAndUpdate(
