@@ -11,8 +11,9 @@ import {
   BookOpenIcon,
   ChartBarIcon,
   ClipboardDocumentListIcon,
-  HomeIcon,
   BellIcon,
+  UsersIcon,
+  CurrencyRupeeIcon
 } from "@heroicons/react/24/outline";
 
 export default function StudentDashboard() {
@@ -90,8 +91,8 @@ export default function StudentDashboard() {
   ];
 
   const bottomNavItems = [
-    { name: "Home", icon: HomeIcon, href: "/dashboard/student" },
-    { name: "Pay", icon: CurrencyDollarIcon, href: "/dashboard/student/payments" },
+    { name: "Profile", icon: UsersIcon, href: "/dashboard/student/profile" },
+    { name: "Pay Fees", icon: CurrencyRupeeIcon, href: "/dashboard/student/pay" },
     { name: "Notifications", icon: BellIcon, href: "/dashboard/student/notifications" },
   ];
 
