@@ -425,7 +425,7 @@ export default function TeacherAttendance() {
               <span className="font-medium">Back</span>
             </button>
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                 My Attendance
               </h1>
               <p className="text-sm text-gray-500">Mark your daily attendance</p>
@@ -528,7 +528,7 @@ export default function TeacherAttendance() {
                                 ? "text-red-800" 
                                 : "text-gray-800"
                           }`}>
-                            Location Verification
+                            Location
                             {locationVerified && (
                               <span className="ml-2 text-xs bg-green-200 text-green-800 px-2 py-1 rounded-full">
                                 Verified ✓
@@ -546,10 +546,10 @@ export default function TeacherAttendance() {
                               locationError
                             ) : currentLocation ? (
                               locationVerified 
-                                ? `Location verified within institute radius: ${currentLocation.latitude.toFixed(6)}, ${currentLocation.longitude.toFixed(6)}`
+                                ? `Good are at the institute location`
                                 : `Location captured: ${currentLocation.latitude.toFixed(6)}, ${currentLocation.longitude.toFixed(6)}`
                             ) : (
-                              "Click to get your current location and verify with institute locations"
+                              "Click to verify you are at the institute location"
                             )}
                           </p>
                         </div>
@@ -566,7 +566,7 @@ export default function TeacherAttendance() {
                               : "bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 focus:ring-indigo-500"
                         }`}
                       >
-                        {locationLoading ? "Verifying..." : locationVerified ? "Re-verify" : "Get & Verify Location"}
+                        {locationLoading ? "Verifying..." : locationVerified ? "Re-Verify" : "Verify"}
                       </button>
                     </div>
                   </div>

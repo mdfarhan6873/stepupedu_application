@@ -69,10 +69,10 @@ export default function TeacherNotificationsPage() {
               <span className="font-medium">Back</span>
             </button>
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                 Notifications
               </h1>
-              <p className="text-sm text-gray-500">Stay updated with important announcements</p>
+              <p className="text-sm text-gray-500">Stay updated</p>
             </div>
           </div>
         </div>

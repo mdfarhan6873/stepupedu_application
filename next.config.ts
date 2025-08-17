@@ -1,15 +1,22 @@
-import type { NextConfig } from "next";
+// next.config.ts
+import withPWA from "next-pwa";
 
-const nextConfig: NextConfig = {
-  /* config options here */
+const nextConfig = {
+  reactStrictMode: true,
   typescript: {
-    // Temporarily ignore build errors for deploy
     ignoreBuildErrors: true,
   },
   eslint: {
-    // Temporarily ignore during builds
     ignoreDuringBuilds: true,
   },
 };
 
-export default nextConfig;
+// Wrap with PWA and add fallbacks
+export default withPWA({
+  dest: "public",
+  register: true,
+  skipWaiting: true,
+  fallbacks: {
+    document: "/_offline", // must match your offline page name
+  },
+})(nextConfig);

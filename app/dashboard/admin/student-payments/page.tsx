@@ -276,7 +276,7 @@ export default function StudentPaymentManagement() {
               </svg>
             </button>
             <div className="flex-1">
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Student Payments</h1>
+              <h1 className="text-xl sm:text-3xl font-bold text-gray-900">Student Payments</h1>
               <p className="text-gray-600 mt-1 text-sm sm:text-base">Manage student fee payments and transactions</p>
             </div>
           </div>
