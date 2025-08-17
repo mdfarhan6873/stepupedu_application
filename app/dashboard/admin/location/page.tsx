@@ -7,6 +7,9 @@ import {
   PlusIcon,
   ArrowLeftIcon,
 } from "@heroicons/react/24/outline";
+import { Geolocation } from "@capacitor/geolocation";
+import { Capacitor } from "@capacitor/core";
+
 
 interface Location {
   _id: string;
@@ -55,18 +58,18 @@ export default function InstituteLocationForm() {
       const method = editingId ? "PUT" : "POST";
       const body = editingId
         ? {
-            id: editingId,
-            ...form,
-            latitude: parseFloat(form.latitude),
-            longitude: parseFloat(form.longitude),
-            radius: parseInt(form.radius),
-          }
+          id: editingId,
+          ...form,
+          latitude: parseFloat(form.latitude),
+          longitude: parseFloat(form.longitude),
+          radius: parseInt(form.radius),
+        }
         : {
-            name: form.name,
-            latitude: parseFloat(form.latitude),
-            longitude: parseFloat(form.longitude),
-            radius: parseInt(form.radius),
-          };
+          name: form.name,
+          latitude: parseFloat(form.latitude),
+          longitude: parseFloat(form.longitude),
+          radius: parseInt(form.radius),
+        };
 
       const res = await fetch("/api/institute-location", {
         method,
@@ -126,20 +129,40 @@ export default function InstituteLocationForm() {
     setShowForm(false);
   };
 
-  const handleFetchLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          setForm({
-            ...form,
-            latitude: pos.coords.latitude.toString(),
-            longitude: pos.coords.longitude.toString(),
-          });
-        },
-        (err) => alert("Failed to fetch location: " + err.message)
-      );
-    } else {
-      alert("Geolocation is not supported by this browser.");
+  const handleFetchLocation = async () => {
+    try {
+      if (Capacitor.isNativePlatform()) {
+        // ✅ Use Capacitor plugin in Android/iOS
+        const perm = await Geolocation.requestPermissions();
+        if (perm.location === "denied") {
+          alert("Location permission denied");
+          return;
+        }
+        const pos = await Geolocation.getCurrentPosition({
+          enableHighAccuracy: true,
+        });
+        setForm({
+          ...form,
+          latitude: pos.coords.latitude.toString(),
+          longitude: pos.coords.longitude.toString(),
+        });
+      } else if ("geolocation" in navigator) {
+        // ✅ Browser fallback
+        navigator.geolocation.getCurrentPosition(
+          (pos) =>
+            setForm({
+              ...form,
+              latitude: pos.coords.latitude.toString(),
+              longitude: pos.coords.longitude.toString(),
+            }),
+          (err) => alert("Failed to fetch location: " + err.message),
+          { enableHighAccuracy: true }
+        );
+      } else {
+        alert("Geolocation not supported");
+      }
+    } catch (err: any) {
+      alert("Failed to fetch location: " + err.message);
     }
   };
 
@@ -158,7 +181,7 @@ export default function InstituteLocationForm() {
                 <ArrowLeftIcon className="h-5 w-5 text-gray-700" />
               </button>
               <MapPinIcon className="h-8 w-8 text-blue-600" />
-              
+
             </div>
             <button
               onClick={() => setShowForm(!showForm)}
@@ -260,8 +283,8 @@ export default function InstituteLocationForm() {
                       {loading
                         ? "Saving..."
                         : editingId
-                        ? "Update Location"
-                        : "Add Location"}
+                          ? "Update Location"
+                          : "Add Location"}
                     </button>
                     {editingId && (
                       <button

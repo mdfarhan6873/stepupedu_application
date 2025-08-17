@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { ArrowLeftIcon, MapPinIcon, ClockIcon, CalendarIcon, CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
-
+import { Capacitor } from "@capacitor/core";
+import { Geolocation } from "@capacitor/geolocation";
 interface Subject {
   class: string;
   section: string;
@@ -207,36 +208,57 @@ export default function TeacherAttendance() {
     });
   };
 
-  const getCurrentLocation = () => {
-    setLocationLoading(true);
-    setLocationError(null);
-    setLocationVerified(false);
-    
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const location = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          };
-          setCurrentLocation(location);
-          
-          // Verify location against institute locations
-          verifyLocationWithInstitute(location);
-          setLocationLoading(false);
-        },
-        (error) => {
-          console.error("Error getting location:", error);
-          setLocationError("Failed to get location. Please enable location services and try again.");
-          setLocationLoading(false);
-        },
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+  const getCurrentLocation = async () => {
+  setLocationLoading(true);
+  setLocationError(null);
+  setLocationVerified(false);
+
+  try {
+    let location;
+
+    if (Capacitor.isNativePlatform()) {
+      // 📱 Use Capacitor Geolocation (Mobile)
+      const pos = await Geolocation.getCurrentPosition({
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 60000,
+      });
+      location = {
+        latitude: pos.coords.latitude,
+        longitude: pos.coords.longitude,
+      };
+    } else if (navigator.geolocation) {
+      // 💻 Use Browser Geolocation (Web)
+      location = await new Promise<{ latitude: number; longitude: number }>(
+        (resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(
+            (pos) => {
+              resolve({
+                latitude: pos.coords.latitude,
+                longitude: pos.coords.longitude,
+              });
+            },
+            (err) => reject(err),
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+          );
+        }
       );
     } else {
-      setLocationError("Geolocation is not supported by this browser.");
-      setLocationLoading(false);
+      throw new Error("Geolocation is not supported by this device.");
     }
-  };
+
+    // ✅ Save & verify location
+    setCurrentLocation(location);
+    verifyLocationWithInstitute(location);
+  } catch (error: any) {
+    console.error("Error getting location:", error);
+    setLocationError(
+      error.message || "Failed to get location. Please enable location services and try again."
+    );
+  } finally {
+    setLocationLoading(false);
+  }
+};
 
   const updateSubject = (field: keyof Subject, value: string) => {
     setSubject(prev => ({ ...prev, [field]: value }));
