@@ -2,7 +2,7 @@
 
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import {
   CalendarIcon,
@@ -13,12 +13,39 @@ import {
   ClipboardDocumentListIcon,
   BellIcon,
   UsersIcon,
-  CurrencyRupeeIcon
+  CurrencyRupeeIcon,
+  ChatBubbleLeftRightIcon
 } from "@heroicons/react/24/outline";
+
+interface WhatsAppGroup {
+  groupName: string;
+  class: string;
+  section: string;
+  groupLink: string;
+  description?: string;
+}
 
 export default function StudentDashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [whatsappGroup, setWhatsappGroup] = useState<WhatsAppGroup | null>(null);
+  const [loadingWhatsapp, setLoadingWhatsapp] = useState(true);
+
+  const fetchWhatsappGroup = async () => {
+    try {
+      const response = await fetch('/api/students/student-whatsapp');
+      if (response.ok) {
+        const result = await response.json();
+        setWhatsappGroup(result.data);
+      } else {
+        console.log('No WhatsApp group found for this student');
+      }
+    } catch (error) {
+      console.error('Error fetching WhatsApp group:', error);
+    } finally {
+      setLoadingWhatsapp(false);
+    }
+  };
 
   useEffect(() => {
     if (status === "loading") return;
@@ -30,6 +57,9 @@ export default function StudentDashboard() {
       router.push(`/dashboard/${session.user.role}`);
       return;
     }
+    
+    // Fetch WhatsApp group data
+    fetchWhatsappGroup();
   }, [session, status, router]);
 
   if (status === "loading") {
@@ -172,6 +202,34 @@ export default function StudentDashboard() {
             ))}
           </div>
         </div>
+
+        {/* WhatsApp Group Section */}
+        {!loadingWhatsapp && whatsappGroup && (
+          <div className="mb-6">
+            <h3 className="text-lg font-bold text-gray-800 mb-4 px-2">Class WhatsApp Group</h3>
+            <div 
+              onClick={() => window.open(whatsappGroup.groupLink, '_blank')}
+              className="bg-gradient-to-r from-green-500 to-green-600 p-6 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 cursor-pointer text-white relative overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent"></div>
+              <div className="relative z-10 flex items-center space-x-4">
+                <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center shadow-lg">
+                  <ChatBubbleLeftRightIcon className="w-8 h-8 text-white" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-xl font-bold mb-1">{whatsappGroup.groupName}</h4>
+                  <p className="text-green-100 text-sm mb-2">Class {whatsappGroup.class} - Section {whatsappGroup.section}</p>
+                  {whatsappGroup.description && (
+                    <p className="text-green-100 text-xs">{whatsappGroup.description}</p>
+                  )}
+                  <p className="text-green-100 text-xs mt-2 font-semibold">Tap to join WhatsApp group</p>
+                </div>
+              </div>
+              <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/10 rounded-full"></div>
+              <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-white/5 rounded-full"></div>
+            </div>
+          </div>
+        )}
       </main>
 
       {/* Bottom Navigation */}
