@@ -207,6 +207,177 @@ export default function TeacherPaymentManagement() {
     return `₹${amount.toLocaleString()}`;
   };
 
+  const handlePrintReceipt = (payment: TeacherPayment) => {
+    const receiptContent = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Payment Receipt - ${payment.receiptNumber}</title>
+          <style>
+            body { 
+              font-family: Arial, sans-serif; 
+              margin: 0; 
+              padding: 20px; 
+              background: white;
+            }
+            .receipt-container { 
+              max-width: 600px; 
+              margin: 0 auto; 
+              border: 2px solid #333; 
+              padding: 20px;
+            }
+            .header { 
+              text-align: center; 
+              border-bottom: 2px solid #333; 
+              padding-bottom: 15px; 
+              margin-bottom: 20px;
+            }
+            .school-name { 
+              font-size: 24px; 
+              font-weight: bold; 
+              margin-bottom: 5px;
+            }
+            .receipt-title { 
+              font-size: 18px; 
+              font-weight: bold; 
+              margin-top: 10px;
+            }
+            .receipt-details { 
+              margin: 20px 0;
+            }
+            .detail-row { 
+              display: flex; 
+              justify-content: space-between; 
+              margin: 8px 0; 
+              padding: 5px 0;
+            }
+            .detail-label { 
+              font-weight: bold; 
+              width: 40%;
+            }
+            .detail-value { 
+              width: 60%; 
+              text-align: right;
+            }
+            .amount-row { 
+              border-top: 2px solid #333; 
+              border-bottom: 2px solid #333; 
+              margin: 15px 0; 
+              padding: 10px 0; 
+              font-size: 18px; 
+              font-weight: bold;
+            }
+            .footer { 
+              margin-top: 30px; 
+              text-align: center; 
+              font-size: 12px;
+            }
+            @media print {
+              body { margin: 0; padding: 10px; }
+              .receipt-container { border: 1px solid #333; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="receipt-container">
+            <div class="header">
+              <div class="school-name">Step-Up Education Institute</div>
+              <div>Teacher Payment Receipt</div>
+              <div class="receipt-title">Receipt #${payment.receiptNumber}</div>
+            </div>
+            
+            <div class="receipt-details">
+              <div class="detail-row">
+                <span class="detail-label">Teacher Name:</span>
+                <span class="detail-value">${payment.teacherId.name}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Subject:</span>
+                <span class="detail-value">${payment.teacherId.subject}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Mobile Number:</span>
+                <span class="detail-value">${payment.teacherId.mobileNo}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Payment Type:</span>
+                <span class="detail-value">${payment.paymentType}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Payment Method:</span>
+                <span class="detail-value">${payment.paymentMethod}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Payment Date:</span>
+                <span class="detail-value">${formatDate(payment.paymentDate)}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Payment Month:</span>
+                <span class="detail-value">${new Date(0, payment.paymentMonth - 1).toLocaleString('default', { month: 'long' })} ${payment.paymentYear}</span>
+              </div>
+              ${payment.transactionId ? `
+              <div class="detail-row">
+                <span class="detail-label">Transaction ID:</span>
+                <span class="detail-value">${payment.transactionId}</span>
+              </div>
+              ` : ''}
+              <div class="detail-row">
+                <span class="detail-label">Status:</span>
+                <span class="detail-value">${payment.status}</span>
+              </div>
+              ${payment.remarks ? `
+              <div class="detail-row">
+                <span class="detail-label">Remarks:</span>
+                <span class="detail-value">${payment.remarks}</span>
+              </div>
+              ` : ''}
+            </div>
+            
+            <div class="detail-row amount-row">
+              <span class="detail-label">Total Amount:</span>
+              <span class="detail-value">${formatAmount(payment.amount)}</span>
+            </div>
+            
+            <div class="footer">
+              <p>Generated on: ${new Date().toLocaleString()}</p>
+              <p>This is a computer generated receipt.</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+
+    // Check if we're in a Capacitor environment
+    if (typeof window !== 'undefined' && (window as any).Capacitor) {
+      // For Capacitor apps, create a blob and open in new window
+      const blob = new Blob([receiptContent], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const newWindow = window.open(url, '_blank');
+      
+      if (newWindow) {
+        newWindow.onload = () => {
+          setTimeout(() => {
+            newWindow.print();
+            URL.revokeObjectURL(url);
+          }, 500);
+        };
+      }
+    } else {
+      // For web browsers
+      const printWindow = window.open('', '_blank');
+      if (printWindow) {
+        printWindow.document.write(receiptContent);
+        printWindow.document.close();
+        printWindow.onload = () => {
+          setTimeout(() => {
+            printWindow.print();
+            printWindow.close();
+          }, 500);
+        };
+      }
+    }
+  };
+
   // Get unique values for filter dropdowns
   const uniqueYears = [...new Set(payments.map(p => p.paymentYear))].sort((a, b) => b - a);
 
@@ -451,6 +622,13 @@ export default function TeacherPaymentManagement() {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-3">
+                          <button
+                            onClick={() => handlePrintReceipt(payment)}
+                            className="text-blue-600 hover:text-blue-800 transition-colors duration-200 font-medium"
+                            title="Print Receipt"
+                          >
+                            Print
+                          </button>
                           <button
                             onClick={() => openEditForm(payment)}
                             className="text-emerald-600 hover:text-emerald-800 transition-colors duration-200 font-medium"
