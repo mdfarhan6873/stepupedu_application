@@ -146,7 +146,7 @@ export default function SchedulePage() {
         <div className="text-center">
           <div className="relative">
             <div className="animate-spin rounded-full h-16 w-16 border-4 border-purple-200 border-t-purple-600 mx-auto"></div>
-            <div className="absolute inset-0 rounded-full h-16 w-16 border-4 border-transparent border-t-purple-400 animate-spin mx-auto" style={{ animationDelay: '0.15s', animationDuration: '1s' }}></div>
+            <div className="absolute inset-0 rounded-full h-16 w-16 border-4 border-transparent border-t-purple-400 animate-spin mx-auto" style={{ animationDelay: '0.15s', animationDuration: '0.3s' }}></div>
           </div>
           <p className="mt-6 text-lg font-medium text-slate-700">Loading schedules...</p>
           <p className="text-sm text-slate-500 mt-1">Please wait while we fetch the data</p>

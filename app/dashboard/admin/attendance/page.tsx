@@ -267,7 +267,7 @@ const AttendancePage = () => {
         <div className="text-center">
           <div className="relative">
             <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-200 border-t-blue-600 mx-auto"></div>
-            <div className="absolute inset-0 rounded-full h-16 w-16 border-4 border-transparent border-t-blue-400 animate-spin mx-auto" style={{ animationDelay: '0.15s', animationDuration: '1s' }}></div>
+            <div className="absolute inset-0 rounded-full h-16 w-16 border-4 border-transparent border-t-blue-400 animate-spin mx-auto" style={{ animationDelay: '0.15s', animationDuration: '0.3s' }}></div>
           </div>
           <p className="mt-6 text-lg font-medium text-slate-700">Loading attendance...</p>
           <p className="text-sm text-slate-500 mt-1">Please wait while we fetch the data</p>
@@ -293,7 +293,7 @@ const AttendancePage = () => {
               </button>
               <div>
                 <h1 className="text-xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
-                  Attendance Management
+                  Attendance
                 </h1>
                 <p className="text-sm text-slate-500 mt-1">
                   {selectedMonth && selectedYear 
@@ -311,7 +311,7 @@ const AttendancePage = () => {
       <div className="px-4 sm:px-6 lg:px-8 py-8">
         {/* Filters */}
         <div className="mb-8 bg-white/70 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/20">
-          <h2 className="text-lg font-bold text-slate-800 mb-4">Filter Attendance</h2>
+          <h2 className="text-xl font-bold text-slate-800 mb-4">Filter Attendance</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">Month</label>

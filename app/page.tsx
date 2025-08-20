@@ -21,7 +21,7 @@ export default function Home() {
       // If not logged in, redirect to login after 3 sec
       const timer = setTimeout(() => {
         router.push("/login");
-      }, 3000);
+      }, 1000);
       return () => clearTimeout(timer);
     }
   }, [status, session, router]);
@@ -36,7 +36,7 @@ export default function Home() {
             alt="StepUpEdu Logo"
             width={250}
             height={250}
-            className="rounded-full shadow-lg"
+            className="rounded-full"
           />
         </div>
 

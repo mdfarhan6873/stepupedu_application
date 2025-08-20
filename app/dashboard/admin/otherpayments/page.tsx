@@ -211,7 +211,7 @@ const OtherPaymentsPage = () => {
         <div className="text-center">
           <div className="relative">
             <div className="animate-spin rounded-full h-16 w-16 border-4 border-emerald-200 border-t-emerald-600 mx-auto"></div>
-            <div className="absolute inset-0 rounded-full h-16 w-16 border-4 border-transparent border-t-emerald-400 animate-spin mx-auto" style={{ animationDelay: '0.15s', animationDuration: '1s' }}></div>
+            <div className="absolute inset-0 rounded-full h-16 w-16 border-4 border-transparent border-t-emerald-400 animate-spin mx-auto" style={{ animationDelay: '0.15s', animationDuration: '0.3s' }}></div>
           </div>
           <p className="mt-6 text-lg font-medium text-slate-700">Loading payments...</p>
           <p className="text-sm text-slate-500 mt-1">Please wait while we fetch the data</p>
@@ -239,7 +239,7 @@ const OtherPaymentsPage = () => {
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
                   Other
                 </h1>
-                <p className="text-sm text-slate-500 mt-1">Payments</p>
+                <p className="text-sm text-slate-500">Payments</p>
               </div>
             </div>
             <button

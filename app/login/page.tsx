@@ -59,11 +59,11 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-indigo-600 via-purple-600 to-blue-700 flex items-center justify-center p-2">
+    <div className="min-h-screen bg-gradient-to-b bg-slate-50 flex items-center justify-center p-2">
       <div className="w-full max-w-sm mx-auto">
         {/* Logo and Header */}
-        <div className="text-center mb-8">
-          <div className="flex justify-center mb-6">
+        <div className="text-center mb-2">
+          <div className="flex justify-center mb-2">
             <div className="relative">
               <Image
                 src="/logo.png"
@@ -75,10 +75,8 @@ export default function LoginPage() {
               <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-white/10 to-transparent"></div>
             </div>
           </div>
-          <h1 className="text-2xl font-bold text-white mb-2">
-            Welcome Back
-          </h1>
-          <p className="text-indigo-100 text-sm">
+         
+          <p className="text-slate-600 text-sm">
             Sign in to continue learning
           </p>
         </div>
@@ -176,7 +174,7 @@ export default function LoginPage() {
                   required
                   value={formData.mobileNo}
                   onChange={handleChange}
-                  className="w-full pl-12 pr-4 py-4 bg-gray-50 border-0 rounded-2xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all duration-200"
+                  className="w-full pl-12 pr-4 py-4 bg-gray-50  rounded-2xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all duration-200 border-2 border-green-200"
                   placeholder="Enter mobile number"
                 />
               </div>
@@ -201,7 +199,7 @@ export default function LoginPage() {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full pl-12 pr-4 py-4 bg-gray-50 border-0 rounded-2xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all duration-200"
+                  className="w-full pl-12 pr-4 py-4 bg-gray-50  rounded-2xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all duration-200 border-2 border-green-200"
                   placeholder="Enter password"
                 />
               </div>
@@ -252,16 +250,16 @@ export default function LoginPage() {
 
         {/* Footer */}
         <div className="text-center space-y-4">
-          <p className="text-sm text-indigo-100">
+          <p className="text-sm text-slate-600">
             Don't have an account?{" "}
-            <a href="#" className="font-semibold text-white hover:text-indigo-200 underline">
+            <a href="#" className="font-semibold text-blue-700 hover:text-indigo-200 underline">
               Contact Administrator
             </a>
           </p>
           
-          <div className="flex items-center justify-center space-x-2 text-xs text-indigo-200">
+          <div className="flex items-center justify-center space-x-2 text-xs text-slate-600">
             <span>Powered by</span>
-            <span className="font-bold text-white">stepupedu.site</span>
+            <span className="font-bold text-blue-700">stepupedu.site</span>
           </div>
         </div>
       </div>
