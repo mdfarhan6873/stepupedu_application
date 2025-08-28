@@ -241,7 +241,7 @@ const TeacherAttendance = () => {
   const currentStats = attendanceData.stats.find(s => s.teacher._id === selectedTeacher);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen text-stone-600 bg-gray-50">
       {/* Mobile Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="flex items-center justify-between p-4">

@@ -167,7 +167,7 @@ export default function InstituteLocationForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen text-stone-600 bg-gray-50 p-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="bg-white shadow-sm rounded-lg p-6 mb-6">

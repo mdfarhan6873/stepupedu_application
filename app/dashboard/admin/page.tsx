@@ -322,7 +322,7 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+    <div className="min-h-screen text-stone-600 bg-gradient-to-br from-indigo-50 via-white to-purple-50">
       {/* Top Header */}
       <div className="bg-white/80 backdrop-blur-md shadow-lg border-b border-white/20 sticky top-0 z-40">
         <div className="px-4 sm:px-6">
@@ -365,7 +365,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 pb-24 px-4 sm:px-6">
+      <main className="flex-1 pb-24 text-stone-600 px-4 sm:px-6">
         {/* Welcome Section */}
         <div className="pt-6 pb-4">
           <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 rounded-3xl p-6 text-white shadow-2xl relative overflow-hidden">

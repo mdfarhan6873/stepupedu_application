@@ -10,9 +10,9 @@ export async function GET(req: NextRequest) {
 
     // Institute details - in a real app, this would come from database
     const instituteDetails = {
-      name: "Sahista Perween",
-      upiId: "6206426130@ibl",
-      qrCode: "upi://pay?pa=stepupedu@paytm&pn=StepUp%20Education%20Institute&cu=INR",
+      name: "StepUp Education Institute",
+      upiId: "..........",
+      qrCode: "upi://pay?pa=................&pn=StepUp%20Education%20Institute&mc=&tr........",
       address: "123 Education Street, Learning City, State - 123456",
       phone: "+91 9234666761",
       email: "info@stepupedu.com"

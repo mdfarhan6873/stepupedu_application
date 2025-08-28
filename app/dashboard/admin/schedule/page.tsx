@@ -156,7 +156,7 @@ export default function SchedulePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-purple-50">
+    <div className="min-h-screen text-stone-600 bg-gradient-to-br from-slate-50 to-purple-50">
       {/* Enhanced Header */}
       <div className="bg-white/80 backdrop-blur-sm shadow-sm border-b border-slate-200/60 sticky top-0 z-10">
         <div className="px-4 sm:px-6 lg:px-8">
