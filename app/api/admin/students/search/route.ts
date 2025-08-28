@@ -1,49 +1,55 @@
-// api/admin/students/search/route.ts
-import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "@/lib/db";
-import Student from "@/lib/modals/student";
-import { auth } from "@/auth";
+import { NextRequest, NextResponse } from 'next/server';
+import connectToDatabase from '@/lib/db';
+import Student from '@/lib/modals/student';
 
-// GET - Search students by mobile number, name, class, section, roll number
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
-    
-    if (!session || session.user.role !== "admin") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     await connectToDatabase();
     
     const { searchParams } = new URL(request.url);
-    const query = searchParams.get('q')?.trim();
+    const query = searchParams.get('q');
+    const class_name = searchParams.get('class');
+    const section = searchParams.get('section');
     
-    if (!query) {
-      return NextResponse.json([]);
-    }
-
-    // Create search filter - search in multiple fields
-    const searchFilter = {
-      $or: [
-        { mobileNo: { $regex: query, $options: 'i' } },
+    let searchQuery: any = {};
+    
+    // Build search query
+    if (query) {
+      searchQuery.$or = [
         { name: { $regex: query, $options: 'i' } },
-        { class: { $regex: query, $options: 'i' } },
-        { section: { $regex: query, $options: 'i' } },
+        { mobileNo: { $regex: query, $options: 'i' } },
         { rollNo: { $regex: query, $options: 'i' } }
-      ]
-    };
-
-    const students = await Student.find(searchFilter)
-      .select('name class section rollNo mobileNo')
-      .limit(10)
-      .sort({ name: 1 });
-
-    return NextResponse.json(students);
-  } catch (error) {
-    console.error("Error searching students:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+      ];
+    }
+    
+    if (class_name) {
+      searchQuery.class = class_name;
+    }
+    
+    if (section) {
+      searchQuery.section = section;
+    }
+    
+    const students = await Student.find(searchQuery)
+      .select('name class section rollNo mobileNo parentName parentMobileNo')
+      .sort({ name: 1 })
+      .limit(50); // Limit results for performance
+    
+    return NextResponse.json({
+      success: true,
+      data: students,
+      count: students.length
+    });
+    
+  } catch (error: any) {
+    console.error('Error searching students:', error);
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: 'Failed to search students',
+        details: error.message 
+      },
+      { status: 500 }
+    );
   }
 }
-
-// Force Node.js runtime to support Mongoose
-export const runtime = 'nodejs';

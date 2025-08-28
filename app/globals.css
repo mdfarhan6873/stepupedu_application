@@ -5,13 +5,6 @@
   --foreground: #171717;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -23,4 +16,64 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Print styles for marksheet */
+@media print {
+  @page {
+    size: A4;
+    margin: 0.5in;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  /* Print utility classes */
+  .print-hidden {
+    display: none !important;
+  }
+  
+  .print-p-0 {
+    padding: 0 !important;
+  }
+  
+  /* Ensure proper page breaks */
+  .page-break-before {
+    page-break-before: always;
+  }
+  
+  .page-break-after {
+    page-break-after: always;
+  }
+  
+  /* Hide elements that shouldn't print */
+  button:not(.print-button),
+  .no-print {
+    display: none !important;
+  }
+  
+  /* Make sure tables fit properly */
+  table {
+    page-break-inside: auto;
+  }
+  
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+  
+  thead {
+    display: table-header-group;
+  }
+  
+  tfoot {
+    display: table-footer-group;
+  }
+}
+
+/* Custom font for signatures */
+.font-cursive {
+  font-family: 'Brush Script MT', cursive;
 }

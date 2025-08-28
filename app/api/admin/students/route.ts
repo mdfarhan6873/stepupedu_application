@@ -15,7 +15,10 @@ export async function GET() {
 
     await connectToDatabase();
     const students = await Student.find({}).sort({ createdAt: -1 });
-    return NextResponse.json(students);
+    return NextResponse.json({
+      success: true,
+      data: students
+    });
   } catch (error) {
     console.error("Error fetching students:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
