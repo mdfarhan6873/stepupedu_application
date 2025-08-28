@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import ResultsForm from "@/components/forms/ResultsForm";
+import { Router } from "next/router";
 
 interface Result {
   _id: string;
@@ -145,6 +146,12 @@ export default function ResultsPage() {
               className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"
             >
               Add
+            </button>
+            <button
+              onClick={() => router.push('/dashboard/admin/GenerateMarksheet')}
+              className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"
+            >
+              Add Individually
             </button>
           </div>
         </div>
