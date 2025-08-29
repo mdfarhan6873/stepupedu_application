@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/db';
 import StudentMarksheet from '@/lib/modals/studentmarksheets';
 import Student from '@/lib/modals/student';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
 
 export async function GET(request: NextRequest) {
   try {
     await connectToDatabase();
     
     // Get session to ensure student is authenticated
-    const session = await getServerSession();
+    const session = await auth();
     
     if (!session) {
       return NextResponse.json(

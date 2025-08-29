@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import Image from 'next/image';
-import ExcelUpload from '@/components/ExcelUpload';import { PlusIcon, TrashIcon, PrinterIcon, MagnifyingGlassIcon, CloudArrowUpIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, TrashIcon, PrinterIcon, MagnifyingGlassIcon, CloudArrowUpIcon } from '@heroicons/react/24/outline';
 
 interface Subject {
   subject: string;
@@ -42,6 +42,7 @@ interface Marksheet {
   percentage: number;
   grade: string;
   division: string;
+  rank: string;
 }
 
 const GenerateMarksheet = () => {
@@ -62,6 +63,7 @@ const GenerateMarksheet = () => {
   const [examTitle, setExamTitle] = useState('');
   const [examType, setExamType] = useState('');
   const [examDate, setExamDate] = useState('');
+  const [rank, setRank] = useState('');
   const [subjects, setSubjects] = useState<Subject[]>([
     {
       subject: '',
@@ -169,6 +171,7 @@ const GenerateMarksheet = () => {
       setExamTitle('');
       setExamType('');
       setExamDate('');
+      setRank('');
       setSubjects([{
         subject: '',
         fullMarks: 100,
@@ -302,6 +305,7 @@ const GenerateMarksheet = () => {
           examType,
           examDate,
           subjects,
+          rank,
           generatedBy: selectedStudent._id, // Using student ID as placeholder - should be admin ID from session
           principalSignature: '/principal-signature.png',
           classTeacherSignature: '/teacher-signature.png'
@@ -322,6 +326,7 @@ const GenerateMarksheet = () => {
         setExamTitle('');
         setExamType('');
         setExamDate('');
+        setRank('');
         setSubjects([{
           subject: '',
           fullMarks: 100,
@@ -341,7 +346,7 @@ const GenerateMarksheet = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [selectedStudent, examTitle, examType, examDate, subjects, fetchStudentMarksheets]);
+  }, [selectedStudent, examTitle, examType, examDate, subjects, rank, fetchStudentMarksheets]);
 
   const handlePrint = useCallback((marksheet: Marksheet) => {
     try {
@@ -498,7 +503,7 @@ const GenerateMarksheet = () => {
                 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Exam Details */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-1">Exam Title</label>
                       <input
@@ -535,6 +540,17 @@ const GenerateMarksheet = () => {
                         onChange={(e) => setExamDate(e.target.value)}
                         className="w-full p-2 border border-gray-300 rounded-lg"
                         required
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Student Rank</label>
+                      <input
+                        type="text"
+                        value={rank}
+                        onChange={(e) => setRank(e.target.value)}
+                        placeholder="e.g., 1st, 2nd, 3rd"
+                        className="w-full p-2 border border-gray-300 rounded-lg"
                       />
                     </div>
                   </div>
@@ -856,6 +872,11 @@ const PrintableMarksheet: React.FC<{ marksheet: Marksheet }> = ({ marksheet }) =
             <p className="text-lg">
               <span className="font-bold">Percentage:</span> {marksheet.percentage}%
             </p>
+            {marksheet.rank && (
+              <p className="text-lg">
+                <span className="font-bold">Rank:</span> {marksheet.rank}
+              </p>
+            )}
           </div>
           
           {/* Signatures */}

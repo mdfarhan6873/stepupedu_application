@@ -87,7 +87,8 @@ export async function POST(request: NextRequest) {
       subjects,
       generatedBy,
       principalSignature,
-      classTeacherSignature
+      classTeacherSignature,
+      rank
     } = data;
     
     // Validate required fields
@@ -134,7 +135,8 @@ export async function POST(request: NextRequest) {
       subjects,
       generatedBy,
       principalSignature: principalSignature || '',
-      classTeacherSignature: classTeacherSignature || ''
+      classTeacherSignature: classTeacherSignature || '',
+      rank: rank || ''
     });
     
     // Save marksheet (calculations will be done in pre-save middleware)

@@ -38,6 +38,7 @@ const StudentMarksheetSchema = new mongoose.Schema({
   percentage: { type: Number, default: 0 },
   grade: { type: String, default: 'Fail' },
   division: { type: String, default: 'Fail' },
+  rank: { type: String, default: '' }, // Student rank as string field
   
   // Additional info
   principalSignature: { type: String, default: '' }, // URL/path to signature image

@@ -112,6 +112,13 @@ export default function StudentDashboard() {
       gradient: "from-red-500 to-red-600"
     },
     { 
+      name: "My Marksheets", 
+      icon: ChartBarIcon, 
+      href: "/dashboard/student/mymarksheets",
+      color: "bg-red-100 text-red-600",
+      gradient: "from-orange-500 to-stone-600"
+    },
+    { 
       name: "Assignments", 
       icon: ClipboardDocumentListIcon, 
       href: "/dashboard/student/assignments",
