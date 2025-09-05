@@ -36,8 +36,8 @@ const StudentMarksheetSchema = new mongoose.Schema({
   totalMarks: { type: Number, default: 0 },
   obtainedMarks: { type: Number, default: 0 },
   percentage: { type: Number, default: 0 },
-  grade: { type: String, default: 'Fail' },
-  division: { type: String, default: 'Fail' },
+  grade: { type: String, default: 'C' },
+  division: { type: String, default: '1st' },
   rank: { type: String, default: '' }, // Student rank as string field
   
   // Additional info
@@ -53,10 +53,10 @@ const StudentMarksheetSchema = new mongoose.Schema({
   generatedDate: { type: Date, default: Date.now },
   
   // Institution details
-  schoolName: { type: String, default: 'London Convent School' },
+  schoolName: { type: String, default: 'StepUp Education Institute' },
   schoolLogo: { type: String, default: '/logo.png' },
-  schoolAddress: { type: String, default: '9 Mogal Kuan, Lohgani, New Rahui Road, Bihar Sharif (Nalanda)' },
-  schoolPhone: { type: String, default: '8340233504, 8578884646' }
+  schoolAddress: { type: String, default: 'Amber, Shekhana Kalan, Sekhana Kala, BiharSharif, Bihar 803101' },
+  schoolPhone: { type: String, default: '9262801624' }
   
 }, {
   timestamps: true
@@ -65,13 +65,13 @@ const StudentMarksheetSchema = new mongoose.Schema({
 // Calculate grade based on percentage
 StudentMarksheetSchema.methods.calculateGrade = function() {
   const percentage = this.percentage;
-  
-  if (percentage >= 90) return 'Diamond';
-  if (percentage >= 80) return 'Gold';
-  if (percentage >= 70) return 'Silver';
-  if (percentage >= 60) return 'Bronze';
-  if (percentage >= 50) return 'Iron';
-  return 'Fail';
+
+  if (percentage >= 90) return 'A+';
+  if (percentage >= 80) return 'A';
+  if (percentage >= 70) return 'B+';
+  if (percentage >= 60) return 'B';
+  if (percentage >= 0) return 'C';
+  return 'C';
 };
 
 // Calculate division based on percentage
@@ -80,8 +80,8 @@ StudentMarksheetSchema.methods.calculateDivision = function() {
   
   if (percentage >= 75) return '1st Division';
   if (percentage >= 60) return '2nd Division';
-  if (percentage >= 45) return '3rd Division';
-  return 'Fail';
+  if (percentage >= 0) return '3rd Division';
+  return '3rd Division';
 };
 
 // Pre-save middleware to calculate values
@@ -93,18 +93,18 @@ StudentMarksheetSchema.pre('save', function(next) {
     
     // Calculate grade based on percentage
     const percentage = this.percentage;
-    if (percentage >= 90) this.grade = 'Diamond';
-    else if (percentage >= 80) this.grade = 'Gold';
-    else if (percentage >= 70) this.grade = 'Silver';
-    else if (percentage >= 60) this.grade = 'Bronze';
-    else if (percentage >= 50) this.grade = 'Iron';
-    else this.grade = 'Fail';
+    if (percentage >= 90) this.grade = 'A+';
+    else if (percentage >= 80) this.grade = 'A';
+    else if (percentage >= 70) this.grade = 'B+';
+    else if (percentage >= 60) this.grade = 'B';
+    else if (percentage >= 0) this.grade = 'C';
+    else this.grade = 'C';
     
     // Calculate division based on percentage
     if (percentage >= 75) this.division = '1st Division';
     else if (percentage >= 60) this.division = '2nd Division';
-    else if (percentage >= 45) this.division = '3rd Division';
-    else this.division = 'Fail';
+    else if (percentage >= 0) this.division = '3rd Division';
+    else this.division = '3rd Division';
   }
   next();
 });

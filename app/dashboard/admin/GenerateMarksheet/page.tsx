@@ -239,7 +239,7 @@ const GenerateMarksheet = () => {
           else if (percentage >= 70) newSubjects[index].grade = 'B+';
           else if (percentage >= 60) newSubjects[index].grade = 'B';
           else if (percentage >= 0) newSubjects[index].grade = 'C';
-          else newSubjects[index].grade = 'Fail';
+          else newSubjects[index].grade = 'c';
         }
         
         return newSubjects;
@@ -257,8 +257,8 @@ const GenerateMarksheet = () => {
       const obtainedMarks = subjects.reduce((sum, subject) => sum + (subject.obtainedMarks || 0), 0);
       const percentage = totalMarks > 0 ? Math.round((obtainedMarks / totalMarks) * 100) : 0;
       
-      let grade = 'Fail';
-      let division = 'Fail';
+      let grade = 'C';
+      let division = '3rd Division';
       
       if (percentage >= 90) grade = 'A+';
       else if (percentage >= 80) grade = 'A';
@@ -273,7 +273,7 @@ const GenerateMarksheet = () => {
       return { totalMarks, obtainedMarks, percentage, grade, division };
     } catch (error) {
       console.error('Error calculating totals:', error);
-      return { totalMarks: 0, obtainedMarks: 0, percentage: 0, grade: 'Fail', division: 'Fail' };
+      return { totalMarks: 0, obtainedMarks: 0, percentage: 0, grade: 'C', division: '3rd Division' };
     }
   }, [subjects]);
 
@@ -505,7 +505,7 @@ const GenerateMarksheet = () => {
   }
 
   return (
-    <div className="min-h-screen text-stone-600 bg-gray-50 p-6">
+    <div className="min-h-screen text-black bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Generate Marksheet</h1>
         
@@ -918,9 +918,9 @@ const GenerateMarksheet = () => {
 const PrintableMarksheet: React.FC<{ marksheet: Marksheet }> = ({ marksheet }) => {
   try {
     return (
-      <div className="max-w-4xl mx-auto bg-white p-8 relative text-stone-700">
+      <div className="max-w-4xl mx-auto bg-white p-8 relative text-black">
         {/* Watermark */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
+        <div className="absolute inset-0 flex items-center justify-center opacity-15 pointer-events-none">
           <Image
             src="/logo.png"
             alt="School Logo"
@@ -1059,20 +1059,36 @@ const PrintableMarksheet: React.FC<{ marksheet: Marksheet }> = ({ marksheet }) =
             <div className="text-center">
               <div className="h-16 border-b border-gray-400 mb-2 relative">
                 {/* Sample signature */}
-                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-blue-600 font-cursive text-xl">
-                  Teacher
-                </div>
+                <Image 
+                  src="/kais.png"
+                  alt="Signature"
+                  width={120}
+                  height={40}
+                  className="absolute left-1/2 transform -translate-x-1/2"
+                  onError={(e) => {
+                    console.error('Signature image failed to load');
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
               </div>
-              <p className="font-semibold">Class Teacher Signature</p>
+              <p className="font-semibold">Director&apos;s Signature</p>
             </div>
             <div className="text-center">
               <div className="h-16 border-b border-gray-400 mb-2 relative">
                 {/* Sample signature */}
-                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-green-600 font-cursive text-xl">
-                  Principal
-                </div>
+                <Image
+                src="/kashif.png"
+                alt="Signature"
+                width={120}
+                height={40}
+                className="absolute  left-1/2 transform -translate-x-1/2"
+                onError={(e) => {
+                  console.error('Signature image failed to load');
+                  e.currentTarget.style.display ='none';
+                }}
+                 />
               </div>
-              <p className="font-semibold">Principal Signature</p>
+              <p className="font-semibold">Director&apos;s Signature</p>
             </div>
           </div>
         </div>
