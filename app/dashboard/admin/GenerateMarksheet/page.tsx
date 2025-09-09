@@ -13,6 +13,7 @@ interface Subject {
   obtainedMarks: number;
   grade: string;
   remark: string;
+  customSubjectName: string;
 }
 
 interface Student {
@@ -61,6 +62,7 @@ const GenerateMarksheet = () => {
   
   // Form states
   const [examTitle, setExamTitle] = useState('');
+  const [customExamTitle, setCustomExamTitle] = useState('');
   const [examType, setExamType] = useState('');
   const [examDate, setExamDate] = useState('');
   const [rank, setRank] = useState('');
@@ -73,7 +75,8 @@ const GenerateMarksheet = () => {
       theoryMarks: 0,
       obtainedMarks: 0,
       grade: '',
-      remark: ''
+      remark: '',
+      customSubjectName: ''
     }
   ]);
   
@@ -170,7 +173,7 @@ const GenerateMarksheet = () => {
     try {
       setSelectedStudent(student);
       fetchStudentMarksheets(student._id);
-      
+
       // Reset form and edit mode
       setIsEditMode(false);
       setEditingMarksheet(null);
@@ -186,7 +189,8 @@ const GenerateMarksheet = () => {
         theoryMarks: 0,
         obtainedMarks: 0,
         grade: '',
-        remark: ''
+        remark: '',
+        customSubjectName: ''
       }]);
       setError('');
       setSuccess('');
@@ -206,7 +210,8 @@ const GenerateMarksheet = () => {
         theoryMarks: 0,
         obtainedMarks: 0,
         grade: '',
-        remark: ''
+        remark: '',
+        customSubjectName: ''
       }]);
     } catch (error) {
       console.error('Error adding subject:', error);
@@ -230,6 +235,11 @@ const GenerateMarksheet = () => {
       setSubjects(prev => {
         const newSubjects = [...prev];
         newSubjects[index] = { ...newSubjects[index], [field]: value };
+        
+        // Clear customSubjectName if subject field changed and is not 'Other'
+        if (field === 'subject' && value !== 'Other') {
+          newSubjects[index].customSubjectName = '';
+        }
         
         // Calculate grade automatically based on obtained marks
         if (field === 'obtainedMarks' || field === 'fullMarks') {
@@ -279,29 +289,36 @@ const GenerateMarksheet = () => {
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!selectedStudent) {
       setError('Please select a student first');
       return;
     }
-    
+
     if (!examTitle || !examType || !examDate) {
       setError('Please fill all exam details');
       return;
     }
-    
+
     if (subjects.some(subject => !subject.subject || subject.obtainedMarks < 0)) {
       setError('Please fill all subject details properly');
       return;
     }
-    
+
     try {
       setIsLoading(true);
       setError('');
       setSuccess('');
-      
+
+      // Process data to replace 'Other' with custom values
+      const finalExamTitle = examTitle === 'Other' ? customExamTitle : examTitle;
+      const finalSubjects = subjects.map(subject => ({
+        ...subject,
+        subject: subject.subject === 'Other' ? subject.customSubjectName : subject.subject
+      }));
+
       let response;
-      
+
       if (isEditMode && editingMarksheet) {
         // Update existing marksheet
         response = await fetch('/api/admin/marksheets', {
@@ -311,10 +328,10 @@ const GenerateMarksheet = () => {
           },
           body: JSON.stringify({
             id: editingMarksheet._id,
-            examTitle,
+            examTitle: finalExamTitle,
             examType,
             examDate,
-            subjects,
+            subjects: finalSubjects,
             rank,
             principalSignature: '/principal-signature.png',
             classTeacherSignature: '/teacher-signature.png'
@@ -329,10 +346,10 @@ const GenerateMarksheet = () => {
           },
           body: JSON.stringify({
             studentId: selectedStudent._id,
-            examTitle,
+            examTitle: finalExamTitle,
             examType,
             examDate,
-            subjects,
+            subjects: finalSubjects,
             rank,
             generatedBy: selectedStudent._id, // Using student ID as placeholder - should be admin ID from session
             principalSignature: '/principal-signature.png',
@@ -367,7 +384,8 @@ const GenerateMarksheet = () => {
           theoryMarks: 0,
           obtainedMarks: 0,
           grade: '',
-          remark: ''
+          remark: '',
+          customSubjectName: ''
         }]);
       } else {
         const errorMessage = isEditMode ? 'Failed to update marksheet' : 'Failed to generate marksheet';
@@ -405,7 +423,10 @@ const GenerateMarksheet = () => {
       setExamType(marksheet.examType);
       setExamDate(new Date(marksheet.examDate).toISOString().split('T')[0]);
       setRank(marksheet.rank || '');
-      setSubjects(marksheet.subjects || [{
+      setSubjects(marksheet.subjects?.map(subject => ({
+        ...subject,
+        customSubjectName: subject.customSubjectName || ''
+      })) || [{
         subject: '',
         fullMarks: 100,
         passMarks: 33,
@@ -413,7 +434,8 @@ const GenerateMarksheet = () => {
         theoryMarks: 0,
         obtainedMarks: 0,
         grade: '',
-        remark: ''
+        remark: '',
+        customSubjectName: ''
       }]);
       
       setError('');
@@ -442,7 +464,8 @@ const GenerateMarksheet = () => {
         theoryMarks: 0,
         obtainedMarks: 0,
         grade: '',
-        remark: ''
+        remark: '',
+        customSubjectName: ''
       }]);
       setError('');
       setSuccess('');
@@ -641,17 +664,40 @@ const GenerateMarksheet = () => {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Exam Details */}
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Exam Title</label>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Exam Title</label>
+                    <select
+                      value={examTitle}
+                      onChange={(e) => {
+                        if (e.target.value === 'Other') {
+                          setExamTitle('Other');
+                          setCustomExamTitle('');
+                        } else {
+                          setExamTitle(e.target.value);
+                          setCustomExamTitle('');
+                        }
+                      }}
+                      className="w-full p-2 border border-gray-300 rounded-lg"
+                      required
+                    >
+                      <option value="">Select Exam Title</option>
+                      <option value="1st Week Assessment">1st Week Assessment</option>
+                      <option value="2nd week Assessment">2nd Week Assessment</option>
+                      <option value="3rd Week Assessment">3rd Week Assessment</option>
+                      <option value="4th Week Assessment">4th Week Assessment</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    {examTitle === 'Other' && (
                       <input
                         type="text"
-                        value={examTitle}
-                        onChange={(e) => setExamTitle(e.target.value)}
-                        placeholder="e.g., First Term Assessment"
-                        className="w-full p-2 border border-gray-300 rounded-lg"
+                        value={customExamTitle}
+                        onChange={(e) => setCustomExamTitle(e.target.value)}
+                        placeholder="Enter custom exam title"
+                        className="w-full mt-2 p-2 border border-gray-300 rounded-lg"
                         required
                       />
-                    </div>
+                    )}
+                  </div>
                     
                     <div>
                       <label className="block text-sm font-medium mb-1">Exam Type</label>
@@ -724,13 +770,48 @@ const GenerateMarksheet = () => {
                           {subjects.map((subject, index) => (
                             <tr key={index}>
                               <td className="border border-gray-300 p-2">
-                                <input
-                                  type="text"
-                                  value={subject.subject}
-                                  onChange={(e) => updateSubject(index, 'subject', e.target.value)}
+                                <select
+                                  value={subject.subject === subject.customSubjectName ? 'Other' : subject.subject}
+                                  onChange={(e) => {
+                                    if (e.target.value === 'Other') {
+                                      updateSubject(index, 'subject', 'Other');
+                                      updateSubject(index, 'customSubjectName', subject.customSubjectName || '');
+                                    } else {
+                                      updateSubject(index, 'subject', e.target.value);
+                                      updateSubject(index, 'customSubjectName', '');
+                                    }
+                                  }}
                                   className="w-full p-1 border rounded"
-                                  placeholder="Subject name"
-                                />
+                                >
+                                  <option value="">Select Subject</option>
+                                  <option value="Mathematics">Mathematics</option>
+                                  <option value="Urdu">Urdu</option>
+                                  <option value="English">English</option>
+                                  <option value="Hindi">Hindi</option>
+                                  <option value="Science">Science</option>
+                                  <option value="Social Science">Social Science</option>
+                                  <option value="Physics">Physics</option>
+                                  <option value="Chemistry">Chemistry</option>
+                                  <option value="Biology">Biology</option>
+                                  <option value="Political Science">Political Science</option>
+                                  <option value="Economics">Economics</option>
+                                  <option value="History">History</option>
+                                  <option value="Geography">Geography</option>
+                                  <option value="Computer Science">Computer Science</option>
+                                  <option value="Physical Education">Physical Education</option>
+                                  <option value="Art">Art</option>
+                                  <option value="Music">Music</option>
+                                  <option value="Other">Other</option>
+                                </select>
+                                {subject.subject === 'Other' && (
+                                  <input
+                                    type="text"
+                                    value={subject.customSubjectName}
+                                    onChange={(e) => updateSubject(index, 'customSubjectName', e.target.value)}
+                                    className="w-full mt-1 p-1 border rounded text-sm"
+                                    placeholder="Enter custom subject name"
+                                  />
+                                )}
                               </td>
                               <td className="border border-gray-300 p-2">
                                 <input
@@ -918,7 +999,18 @@ const GenerateMarksheet = () => {
 const PrintableMarksheet: React.FC<{ marksheet: Marksheet }> = ({ marksheet }) => {
   try {
     return (
-      <div className="max-w-4xl mx-auto bg-white p-8 relative text-black">
+      <>
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            @media print {
+              * {
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+              }
+            }
+          `
+        }} />
+        <div className="max-w-4xl mx-auto bg-white p-8 relative text-black">
         {/* Watermark */}
         <div className="absolute inset-0 flex items-center justify-center opacity-15 pointer-events-none">
           <Image
@@ -1004,7 +1096,9 @@ const PrintableMarksheet: React.FC<{ marksheet: Marksheet }> = ({ marksheet }) =
               <tbody>
                 {marksheet.subjects.map((subject, index) => (
                   <tr key={index}>
-                    <td className="border border-gray-300 p-2 font-semibold uppercase">{subject.subject}</td>
+                    <td className="border border-gray-300 p-2 font-semibold uppercase">
+                      {subject.subject === 'Other' ? subject.customSubjectName : subject.subject}
+                    </td>
                     <td className="border border-gray-300 p-2 text-center">{subject.fullMarks}</td>
                     <td className="border border-gray-300 p-2 text-center">{subject.passMarks}</td>
                     <td className="border border-gray-300 p-2 text-center">
@@ -1073,26 +1167,27 @@ const PrintableMarksheet: React.FC<{ marksheet: Marksheet }> = ({ marksheet }) =
               </div>
               <p className="font-semibold">Director&apos;s Signature</p>
             </div>
-            <div className="text-center">
-              <div className="h-16 border-b border-gray-400 mb-2 relative">
-                {/* Sample signature */}
-                <Image
-                src="/kashif.png"
-                alt="Signature"
-                width={120}
-                height={40}
-                className="absolute  left-1/2 transform -translate-x-1/2"
-                onError={(e) => {
-                  console.error('Signature image failed to load');
-                  e.currentTarget.style.display ='none';
-                }}
-                 />
+              <div className="text-center">
+                <div className="h-16 border-b border-gray-400 mb-2 relative">
+                  {/* Sample signature */}
+                  <Image
+                    src="/kashif.png"
+                    alt="Signature"
+                    width={120}
+                    height={40}
+                    className="absolute left-1/2 transform -translate-x-1/2"
+                    onError={(e) => {
+                      console.error('Signature image failed to load');
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                </div>
+                <p className="font-semibold">Director&apos;s Signature</p>
               </div>
-              <p className="font-semibold">Director&apos;s Signature</p>
-            </div>
           </div>
         </div>
       </div>
+      </>
     );
   } catch (error) {
     console.error('Error rendering PrintableMarksheet:', error);
