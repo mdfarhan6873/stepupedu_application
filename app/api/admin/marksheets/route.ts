@@ -195,8 +195,8 @@ export async function PUT(request: NextRequest) {
 
       // Calculate division based on percentage
       let division = '3rd Division';
-      if (percentage >= 75) division = '1st Division';
-      else if (percentage >= 60) division = '2nd Division';
+      if (percentage >= 60) division = '1st Division';
+      else if (percentage >= 45) division = '2nd Division';
       else if (percentage >= 0) division = '3rd Division';
 
       // Add calculated fields to update data

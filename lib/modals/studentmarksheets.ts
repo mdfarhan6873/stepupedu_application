@@ -78,8 +78,8 @@ StudentMarksheetSchema.methods.calculateGrade = function() {
 StudentMarksheetSchema.methods.calculateDivision = function() {
   const percentage = this.percentage;
   
-  if (percentage >= 75) return '1st Division';
-  if (percentage >= 60) return '2nd Division';
+  if (percentage >= 60) return '1st Division';
+  if (percentage >= 45) return '2nd Division';
   if (percentage >= 0) return '3rd Division';
   return '3rd Division';
 };
@@ -101,8 +101,8 @@ StudentMarksheetSchema.pre('save', function(next) {
     else this.grade = 'C';
     
     // Calculate division based on percentage
-    if (percentage >= 75) this.division = '1st Division';
-    else if (percentage >= 60) this.division = '2nd Division';
+    if (percentage >= 60) this.division = '1st Division';
+    else if (percentage >= 45) this.division = '2nd Division';
     else if (percentage >= 0) this.division = '3rd Division';
     else this.division = '3rd Division';
   }
