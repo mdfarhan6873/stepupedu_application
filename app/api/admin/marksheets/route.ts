@@ -168,43 +168,71 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     await connectToDatabase();
-    
+
     const data = await request.json();
     const { id, ...updateData } = data;
-    
+
     if (!id) {
       return NextResponse.json(
         { success: false, error: 'Marksheet ID is required' },
         { status: 400 }
       );
     }
-    
+
+    // Calculate totals if subjects are being updated
+    if (updateData.subjects && Array.isArray(updateData.subjects) && updateData.subjects.length > 0) {
+      const totalMarks = updateData.subjects.reduce((sum: number, subject: any) => sum + (subject.fullMarks || 0), 0);
+      const obtainedMarks = updateData.subjects.reduce((sum: number, subject: any) => sum + (subject.obtainedMarks || 0), 0);
+      const percentage = totalMarks > 0 ? Math.round((obtainedMarks / totalMarks) * 100) : 0;
+
+      // Calculate grade based on percentage
+      let grade = 'C';
+      if (percentage >= 90) grade = 'A+';
+      else if (percentage >= 80) grade = 'A';
+      else if (percentage >= 70) grade = 'B+';
+      else if (percentage >= 60) grade = 'B';
+      else if (percentage >= 0) grade = 'C';
+
+      // Calculate division based on percentage
+      let division = '3rd Division';
+      if (percentage >= 75) division = '1st Division';
+      else if (percentage >= 60) division = '2nd Division';
+      else if (percentage >= 0) division = '3rd Division';
+
+      // Add calculated fields to update data
+      updateData.totalMarks = totalMarks;
+      updateData.obtainedMarks = obtainedMarks;
+      updateData.percentage = percentage;
+      updateData.grade = grade;
+      updateData.division = division;
+    }
+
     const updatedMarksheet = await StudentMarksheet.findByIdAndUpdate(
       id,
       updateData,
       { new: true, runValidators: true }
     ).populate('studentId', 'name rollNo class section mobileNo');
-    
+
     if (!updatedMarksheet) {
       return NextResponse.json(
         { success: false, error: 'Marksheet not found' },
         { status: 404 }
       );
     }
-    
+
     return NextResponse.json({
       success: true,
       data: updatedMarksheet,
       message: 'Marksheet updated successfully'
     });
-    
+
   } catch (error: any) {
     console.error('Error updating marksheet:', error);
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: 'Failed to update marksheet',
-        details: error.message 
+        details: error.message
       },
       { status: 500 }
     );
