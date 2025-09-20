@@ -1043,7 +1043,7 @@ const PrintableMarksheet: React.FC<{ marksheet: Marksheet }> = ({ marksheet }) =
             <div className="flex-1 text-center">
               <h1 className="text-3xl font-bold text-red-600 mb-1">STEP-UP EDUCATION INSTITUTE</h1>
               <p className="text-sm text-gray-600 mb-1">1st To 12th Grade</p>
-              <p className="text-sm text-gray-600 mb-1">BSEB and CBSE bassed Curriculum</p>
+              <p className="text-sm text-gray-600 mb-1">BSEB and CBSE Bassed Curriculum</p>
                <p>📞 9262801624</p>
             
             </div>
@@ -1051,7 +1051,7 @@ const PrintableMarksheet: React.FC<{ marksheet: Marksheet }> = ({ marksheet }) =
           </div>
           
           <div className="text-center text-sm text-gray-600 mb-2 ">
-            Amber, Shekhana Kalan, Sekhana Kala, BiharSharif, Bihar 803101
+            Amber, Shekhana Kalan, Sekhana Kalan, BiharSharif, Bihar 803101
           </div>
           
           {/* Student Info */}
@@ -1077,7 +1077,7 @@ const PrintableMarksheet: React.FC<{ marksheet: Marksheet }> = ({ marksheet }) =
           
           {/* Report Card */}
           <div className="mb-6">
-            <div className="bg-blue-600 text-white text-center py-3 text-xl font-bold mb-0">
+            <div className=" text-black text-center py-3  text-xl font-bold mb-0">
               REPORT CARD
             </div>
             
