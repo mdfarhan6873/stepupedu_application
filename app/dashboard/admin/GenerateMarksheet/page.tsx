@@ -54,12 +54,12 @@ const GenerateMarksheet = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  
+
   // Filter states
   const [classFilter, setClassFilter] = useState('');
   const [sectionFilter, setSectionFilter] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   // Form states
   const [examTitle, setExamTitle] = useState('');
   const [customExamTitle, setCustomExamTitle] = useState('');
@@ -79,11 +79,11 @@ const GenerateMarksheet = () => {
       customSubjectName: ''
     }
   ]);
-  
+
   // Print mode
   const [showPrintView, setShowPrintView] = useState(false);
   const [selectedMarksheet, setSelectedMarksheet] = useState<Marksheet | null>(null);
-  
+
   // Edit mode
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingMarksheet, setEditingMarksheet] = useState<Marksheet | null>(null);
@@ -94,13 +94,13 @@ const GenerateMarksheet = () => {
       setIsLoading(true);
       setError('');
       const response = await fetch('/api/admin/students');
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const result = await response.json();
-      
+
       if (result.success) {
         setStudents(result.data || []);
         setFilteredStudents(result.data || []);
@@ -119,13 +119,13 @@ const GenerateMarksheet = () => {
     try {
       setError('');
       const response = await fetch(`/api/admin/marksheets?studentId=${studentId}`);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const result = await response.json();
-      
+
       if (result.success) {
         setMarksheets(result.data || []);
       } else {
@@ -146,22 +146,22 @@ const GenerateMarksheet = () => {
   useEffect(() => {
     try {
       let filtered = students;
-      
+
       if (classFilter) {
         filtered = filtered.filter(student => student.class === classFilter);
       }
-      
+
       if (sectionFilter) {
         filtered = filtered.filter(student => student.section === sectionFilter);
       }
-      
+
       if (searchTerm) {
-        filtered = filtered.filter(student => 
+        filtered = filtered.filter(student =>
           student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           student.mobileNo.includes(searchTerm)
         );
       }
-      
+
       setFilteredStudents(filtered);
     } catch (error) {
       console.error('Error filtering students:', error);
@@ -235,12 +235,12 @@ const GenerateMarksheet = () => {
       setSubjects(prev => {
         const newSubjects = [...prev];
         newSubjects[index] = { ...newSubjects[index], [field]: value };
-        
+
         // Clear customSubjectName if subject field changed and is not 'Other'
         if (field === 'subject' && value !== 'Other') {
           newSubjects[index].customSubjectName = '';
         }
-        
+
         // Calculate grade automatically based on obtained marks
         if (field === 'obtainedMarks' || field === 'fullMarks') {
           const percentage = (newSubjects[index].obtainedMarks / newSubjects[index].fullMarks) * 100;
@@ -248,10 +248,12 @@ const GenerateMarksheet = () => {
           else if (percentage >= 80) newSubjects[index].grade = 'A';
           else if (percentage >= 70) newSubjects[index].grade = 'B+';
           else if (percentage >= 60) newSubjects[index].grade = 'B';
-          else if (percentage >= 0) newSubjects[index].grade = 'C';
-          else newSubjects[index].grade = 'c';
+          else if (percentage >= 45) newSubjects[index].grade = 'C';
+          else if (percentage >= 10) newSubjects[index].grade = 'D';
+          else if (percentage >= 0) newSubjects[index].grade = 'F';
+          else newSubjects[index].grade = 'F';
         }
-        
+
         return newSubjects;
       });
     } catch (error) {
@@ -266,20 +268,25 @@ const GenerateMarksheet = () => {
       const totalMarks = subjects.reduce((sum, subject) => sum + (subject.fullMarks || 0), 0);
       const obtainedMarks = subjects.reduce((sum, subject) => sum + (subject.obtainedMarks || 0), 0);
       const percentage = totalMarks > 0 ? Math.round((obtainedMarks / totalMarks) * 100) : 0;
-      
-      let grade = 'C';
+
+      let grade = 'F';
       let division = '3rd Division';
-      
+
       if (percentage >= 90) grade = 'A+';
       else if (percentage >= 80) grade = 'A';
       else if (percentage >= 70) grade = 'B+';
       else if (percentage >= 60) grade = 'B';
-      else if (percentage >= 0) grade = 'C';
-      
+      else if (percentage >= 45) grade = 'C';
+      else if (percentage >= 10) grade = 'D';
+      else if (percentage >= 0) grade = 'F';
+
+
+
+
       if (percentage >= 60) division = '1st Division';
       else if (percentage >= 45) division = '2nd Division';
       else if (percentage >= 0) division = '3rd Division';
-      
+
       return { totalMarks, obtainedMarks, percentage, grade, division };
     } catch (error) {
       console.error('Error calculating totals:', error);
@@ -357,18 +364,18 @@ const GenerateMarksheet = () => {
           }),
         });
       }
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const result = await response.json();
-      
+
       if (result.success) {
         const successMessage = isEditMode ? 'Marksheet updated successfully!' : 'Marksheet generated successfully!';
         setSuccess(successMessage);
         fetchStudentMarksheets(selectedStudent._id);
-        
+
         // Reset form and edit mode
         setIsEditMode(false);
         setEditingMarksheet(null);
@@ -417,7 +424,7 @@ const GenerateMarksheet = () => {
     try {
       setIsEditMode(true);
       setEditingMarksheet(marksheet);
-      
+
       // Populate form with existing data
       setExamTitle(marksheet.examTitle);
       setExamType(marksheet.examType);
@@ -437,7 +444,7 @@ const GenerateMarksheet = () => {
         remark: '',
         customSubjectName: ''
       }]);
-      
+
       setError('');
       setSuccess('');
     } catch (error) {
@@ -450,7 +457,7 @@ const GenerateMarksheet = () => {
     try {
       setIsEditMode(false);
       setEditingMarksheet(null);
-      
+
       // Reset form
       setExamTitle('');
       setExamType('');
@@ -484,17 +491,17 @@ const GenerateMarksheet = () => {
       setIsLoading(true);
       setError('');
       setSuccess('');
-      
+
       const response = await fetch(`/api/admin/marksheets?id=${marksheetId}`, {
         method: 'DELETE',
       });
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const result = await response.json();
-      
+
       if (result.success) {
         setSuccess('Marksheet deleted successfully!');
         // Refresh the marksheets list
@@ -521,7 +528,7 @@ const GenerateMarksheet = () => {
         >
           Back to Edit
         </button>
-        
+
         <PrintableMarksheet marksheet={selectedMarksheet} />
       </div>
     );
@@ -531,24 +538,24 @@ const GenerateMarksheet = () => {
     <div className="min-h-screen text-black bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Generate Marksheet</h1>
-        
+
         {error && (
           <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
             {error}
           </div>
         )}
-        
+
         {success && (
           <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
             {success}
           </div>
         )}
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Student Selection Panel */}
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold mb-4">Select Student</h2>
-            
+
             {/* Filters */}
             <div className="space-y-4 mb-6">
               <div>
@@ -576,7 +583,7 @@ const GenerateMarksheet = () => {
                   <option value="12th">12th</option>
                 </select>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium mb-1">Section</label>
                 <select
@@ -593,7 +600,7 @@ const GenerateMarksheet = () => {
                   <option value="F">F</option>
                 </select>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium mb-1">Search</label>
                 <div className="relative">
@@ -608,7 +615,7 @@ const GenerateMarksheet = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Students List */}
             <div className="max-h-96 overflow-y-auto">
               {isLoading ? (
@@ -621,11 +628,10 @@ const GenerateMarksheet = () => {
                     <div
                       key={student._id}
                       onClick={() => handleStudentSelect(student)}
-                      className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-                        selectedStudent?._id === student._id
+                      className={`p-3 border rounded-lg cursor-pointer transition-colors ${selectedStudent?._id === student._id
                           ? 'border-blue-500 bg-blue-50'
                           : 'border-gray-200 hover:border-gray-300'
-                      }`}
+                        }`}
                     >
                       <div className="font-medium">{student.name}</div>
                       <div className="text-sm text-gray-500">
@@ -640,7 +646,7 @@ const GenerateMarksheet = () => {
               )}
             </div>
           </div>
-          
+
           {/* Marksheet Form */}
           <div className="lg:col-span-2 bg-white text-stone-600 rounded-lg shadow p-6">
             {selectedStudent ? (
@@ -660,45 +666,45 @@ const GenerateMarksheet = () => {
                     )}
                   </div>
                 </div>
-                
+
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Exam Details */}
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Exam Title</label>
-                    <select
-                      value={examTitle}
-                      onChange={(e) => {
-                        if (e.target.value === 'Other') {
-                          setExamTitle('Other');
-                          setCustomExamTitle('');
-                        } else {
-                          setExamTitle(e.target.value);
-                          setCustomExamTitle('');
-                        }
-                      }}
-                      className="w-full p-2 border border-gray-300 rounded-lg"
-                      required
-                    >
-                      <option value="">Select Exam Title</option>
-                      <option value="1st Week Assessment">1st Week Assessment</option>
-                      <option value="2nd week Assessment">2nd Week Assessment</option>
-                      <option value="3rd Week Assessment">3rd Week Assessment</option>
-                      <option value="4th Week Assessment">4th Week Assessment</option>
-                      <option value="Other">Other</option>
-                    </select>
-                    {examTitle === 'Other' && (
-                      <input
-                        type="text"
-                        value={customExamTitle}
-                        onChange={(e) => setCustomExamTitle(e.target.value)}
-                        placeholder="Enter custom exam title"
-                        className="w-full mt-2 p-2 border border-gray-300 rounded-lg"
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Exam Title</label>
+                      <select
+                        value={examTitle}
+                        onChange={(e) => {
+                          if (e.target.value === 'Other') {
+                            setExamTitle('Other');
+                            setCustomExamTitle('');
+                          } else {
+                            setExamTitle(e.target.value);
+                            setCustomExamTitle('');
+                          }
+                        }}
+                        className="w-full p-2 border border-gray-300 rounded-lg"
                         required
-                      />
-                    )}
-                  </div>
-                    
+                      >
+                        <option value="">Select Exam Title</option>
+                        <option value="1st Week Assessment">1st Week Assessment</option>
+                        <option value="2nd week Assessment">2nd Week Assessment</option>
+                        <option value="3rd Week Assessment">3rd Week Assessment</option>
+                        <option value="4th Week Assessment">4th Week Assessment</option>
+                        <option value="Other">Other</option>
+                      </select>
+                      {examTitle === 'Other' && (
+                        <input
+                          type="text"
+                          value={customExamTitle}
+                          onChange={(e) => setCustomExamTitle(e.target.value)}
+                          placeholder="Enter custom exam title"
+                          className="w-full mt-2 p-2 border border-gray-300 rounded-lg"
+                          required
+                        />
+                      )}
+                    </div>
+
                     <div>
                       <label className="block text-sm font-medium mb-1">Exam Type</label>
                       <select
@@ -714,7 +720,7 @@ const GenerateMarksheet = () => {
                         <option value="Annual Exam">Annual Exam</option>
                       </select>
                     </div>
-                    
+
                     <div>
                       <label className="block text-sm font-medium mb-1">Exam Date</label>
                       <input
@@ -725,7 +731,7 @@ const GenerateMarksheet = () => {
                         required
                       />
                     </div>
-                    
+
                     <div>
                       <label className="block text-sm font-medium mb-1">Student Rank</label>
                       <input
@@ -737,7 +743,7 @@ const GenerateMarksheet = () => {
                       />
                     </div>
                   </div>
-                  
+
                   {/* Subjects Table */}
                   <div>
                     <div className="flex justify-between items-center mb-4">
@@ -751,7 +757,7 @@ const GenerateMarksheet = () => {
                         Add Subject
                       </button>
                     </div>
-                    
+
                     <div className="overflow-x-auto">
                       <table className="w-full border-collapse border border-gray-300">
                         <thead>
@@ -891,7 +897,7 @@ const GenerateMarksheet = () => {
                       </table>
                     </div>
                   </div>
-                  
+
                   {/* Summary */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
                     <div>
@@ -907,7 +913,7 @@ const GenerateMarksheet = () => {
                       <span className="text-lg">{totals.percentage}%</span>
                     </div>
                   </div>
-                  
+
                   <div className="flex gap-4">
                     <button
                       type="submit"
@@ -928,7 +934,7 @@ const GenerateMarksheet = () => {
                     )}
                   </div>
                 </form>
-                
+
                 {/* Previous Marksheets */}
                 {marksheets.length > 0 && (
                   <div className="mt-8">
@@ -940,7 +946,7 @@ const GenerateMarksheet = () => {
                             <div className="flex-1">
                               <div className="font-medium">{marksheet.examTitle}</div>
                               <div className="text-sm text-gray-500 mb-2">
-                                {marksheet.examType} | {new Date(marksheet.examDate).toLocaleDateString()} | 
+                                {marksheet.examType} | {new Date(marksheet.examDate).toLocaleDateString()} |
                                 {marksheet.percentage}% | {marksheet.grade}
                               </div>
                               {marksheet.rank && (
@@ -1011,25 +1017,25 @@ const PrintableMarksheet: React.FC<{ marksheet: Marksheet }> = ({ marksheet }) =
           `
         }} />
         <div className="max-w-4xl mx-auto bg-white p-8 relative text-black">
-        {/* Watermark */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-15 pointer-events-none">
-          <Image
-            src="/logo.png"
-            alt="School Logo"
-            width={500}
-            height={500}
-            className="object-contain"
-            onError={(e) => {
-              console.error('Logo image failed to load');
-              e.currentTarget.style.display = 'none';
-            }}
-          />
-        </div>
-        
-        {/* Header */}
-        <div className="relative z-10">
-          <div className="flex items-center gap-4  border-b-2 border-blue-600 ">
-            {/* <Image
+          {/* Watermark */}
+          <div className="absolute inset-0 flex items-center justify-center opacity-15 pointer-events-none">
+            <Image
+              src="/logo.png"
+              alt="School Logo"
+              width={500}
+              height={500}
+              className="object-contain"
+              onError={(e) => {
+                console.error('Logo image failed to load');
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+          </div>
+
+          {/* Header */}
+          <div className="relative z-10">
+            <div className="flex items-center gap-4  border-b-2 border-blue-600 ">
+              {/* <Image
               src="/logo.png"
               alt="School Logo"
               width={80}
@@ -1040,133 +1046,133 @@ const PrintableMarksheet: React.FC<{ marksheet: Marksheet }> = ({ marksheet }) =
                 e.currentTarget.style.display = 'none';
               }}
             /> */}
-            <div className="flex-1 text-center">
-              <h1 className="text-3xl font-bold text-red-600 mb-1">STEP-UP EDUCATION INSTITUTE</h1>
-              <p className="text-sm text-gray-600 mb-1">1st To 12th Grade</p>
-              <p className="text-sm text-gray-600 mb-1">BSEB and CBSE Based Curriculum</p>
-               <p>📞 9262801624</p>
-            
+              <div className="flex-1 text-center">
+                <h1 className="text-3xl font-bold text-red-600 mb-1">STEP-UP EDUCATION INSTITUTE</h1>
+                <p className="text-sm text-gray-600 mb-1">1st To 12th Grade</p>
+                <p className="text-sm text-gray-600 mb-1">BSEB and CBSE Based Curriculum</p>
+                <p>📞 9262801624</p>
+
+              </div>
+
             </div>
-           
-          </div>
-          
-          <div className="text-center text-sm text-gray-600 mb-2 ">
-            Amber, Shekhana Kalan, Sekhana Kalan, BiharSharif, Bihar 803101
-          </div>
-          
-          {/* Student Info */}
-          <div className="flex items-center gap-4 mb-6">
-            
-            <div className="flex-1">
-              <h2 className="text-2xl font-bold text-blue-600 mb-2">
-                {marksheet.studentName.toUpperCase()}
-              </h2>
-              <div className='flex items-center gap-8'>
-                <p className="text-gray-700 mb-1">
-                <span className="font-semibold">Class:</span> {marksheet.class} ({marksheet.section})
-              </p>
-              <p className="text-gray-700 mb-1">
-                <span className="font-semibold">Roll Number:</span> {marksheet.rollNumber}
-              </p>
-              <p className="text-gray-700">
-                <span className="font-semibold">Exam Type:</span> {marksheet.examTitle} ({new Date(marksheet.examDate).toLocaleDateString()})
-              </p>
+
+            <div className="text-center text-sm text-gray-600 mb-2 ">
+              Amber, Shekhana Kalan, Sekhana Kalan, BiharSharif, Bihar 803101
+            </div>
+
+            {/* Student Info */}
+            <div className="flex items-center gap-4 mb-6">
+
+              <div className="flex-1">
+                <h2 className="text-2xl font-bold text-blue-600 mb-2">
+                  {marksheet.studentName.toUpperCase()}
+                </h2>
+                <div className='flex items-center gap-8'>
+                  <p className="text-gray-700 mb-1">
+                    <span className="font-semibold">Class:</span> {marksheet.class} ({marksheet.section})
+                  </p>
+                  <p className="text-gray-700 mb-1">
+                    <span className="font-semibold">Roll Number:</span> {marksheet.rollNumber}
+                  </p>
+                  <p className="text-gray-700">
+                    <span className="font-semibold">Exam Type:</span> {marksheet.examTitle} ({new Date(marksheet.examDate).toLocaleDateString()})
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-          
-          {/* Report Card */}
-          <div className="mb-6">
-            <div className=" text-black text-center py-3  text-xl font-bold mb-0">
-              REPORT CARD
-            </div>
-            
-            <table className="w-full border-collapse border border-gray-300">
-              <thead>
-                <tr className="bg-blue-600 text-white">
-                  <th className="border border-gray-300 p-2">SUBJECT</th>
-                  <th className="border border-gray-300 p-2">FULL MARKS</th>
-                  <th className="border border-gray-300 p-2">PASS MARKS</th>
-                  <th className="border border-gray-300 p-2">ASSIGNMENT</th>
-                  <th className="border border-gray-300 p-2">THEORY</th>
-                  <th className="border border-gray-300 p-2">MARKS OBTAINED</th>
-                  <th className="border border-gray-300 p-2">GRADE</th>
-                </tr>
-              </thead>
-              <tbody>
-                {marksheet.subjects.map((subject, index) => (
-                  <tr key={index}>
-                    <td className="border border-gray-300 p-2 font-semibold uppercase">
-                      {subject.subject === 'Other' ? subject.customSubjectName : subject.subject}
-                    </td>
-                    <td className="border border-gray-300 p-2 text-center">{subject.fullMarks}</td>
-                    <td className="border border-gray-300 p-2 text-center">{subject.passMarks}</td>
-                    <td className="border border-gray-300 p-2 text-center">
-                      {subject.assignmentMarks > 0 ? subject.assignmentMarks : '-'}
-                    </td>
-                    <td className="border border-gray-300 p-2 text-center">
-                      {subject.theoryMarks > 0 ? subject.theoryMarks : subject.obtainedMarks}
-                    </td>
-                    <td className="border border-gray-300 p-2 text-center font-semibold">{subject.obtainedMarks}</td>
-                    <td className="border border-gray-300 p-2 text-center font-semibold">{subject.grade}</td>
+
+            {/* Report Card */}
+            <div className="mb-6">
+              <div className=" text-black text-center py-3  text-xl font-bold mb-0">
+                REPORT CARD
+              </div>
+
+              <table className="w-full border-collapse border border-gray-300">
+                <thead>
+                  <tr className="bg-blue-600 text-white">
+                    <th className="border border-gray-300 p-2">SUBJECT</th>
+                    <th className="border border-gray-300 p-2">FULL MARKS</th>
+                    <th className="border border-gray-300 p-2">PASS MARKS</th>
+                    <th className="border border-gray-300 p-2">ASSIGNMENT</th>
+                    <th className="border border-gray-300 p-2">THEORY</th>
+                    <th className="border border-gray-300 p-2">MARKS OBTAINED</th>
+                    <th className="border border-gray-300 p-2">GRADE</th>
                   </tr>
-                ))}
-              </tbody>
-              <tfoot>
-                <tr className="bg-red-600 text-white font-bold">
-                  <td className="border border-gray-300 p-2">TOTAL</td>
-                  <td className="border border-gray-300 p-2 text-center">{marksheet.totalMarks}</td>
-                  <td className="border border-gray-300 p-2"></td>
-                  <td className="border border-gray-300 p-2"></td>
-                  <td className="border border-gray-300 p-2"></td>
-                  <td className="border border-gray-300 p-2 text-center">{marksheet.obtainedMarks}</td>
-                  <td className="border border-gray-300 p-2"></td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-          
-          {/* Summary */}
-          <div className="mb-8 space-y-2 flex items-center justify-around">
-            <p className="text-lg">
-              <span className="font-bold">Division:</span> {marksheet.division}
-            </p>
-            <p className="text-lg">
-              <span className="font-bold">Grade:</span> {marksheet.grade}
-            </p>
-            <p className="text-lg">
-              <span className="font-bold">Percentage:</span> {marksheet.percentage}%
-            </p>
-            {marksheet.rank && (
+                </thead>
+                <tbody>
+                  {marksheet.subjects.map((subject, index) => (
+                    <tr key={index}>
+                      <td className="border border-gray-300 p-2 font-semibold uppercase">
+                        {subject.subject === 'Other' ? subject.customSubjectName : subject.subject}
+                      </td>
+                      <td className="border border-gray-300 p-2 text-center">{subject.fullMarks}</td>
+                      <td className="border border-gray-300 p-2 text-center">{subject.passMarks}</td>
+                      <td className="border border-gray-300 p-2 text-center">
+                        {subject.assignmentMarks > 0 ? subject.assignmentMarks : '-'}
+                      </td>
+                      <td className="border border-gray-300 p-2 text-center">
+                        {subject.theoryMarks > 0 ? subject.theoryMarks : subject.obtainedMarks}
+                      </td>
+                      <td className="border border-gray-300 p-2 text-center font-semibold">{subject.obtainedMarks}</td>
+                      <td className="border border-gray-300 p-2 text-center font-semibold">{subject.grade}</td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr className="bg-red-600 text-white font-bold">
+                    <td className="border border-gray-300 p-2">TOTAL</td>
+                    <td className="border border-gray-300 p-2 text-center">{marksheet.totalMarks}</td>
+                    <td className="border border-gray-300 p-2"></td>
+                    <td className="border border-gray-300 p-2"></td>
+                    <td className="border border-gray-300 p-2"></td>
+                    <td className="border border-gray-300 p-2 text-center">{marksheet.obtainedMarks}</td>
+                    <td className="border border-gray-300 p-2"></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+            {/* Summary */}
+            <div className="mb-8 space-y-2 flex items-center justify-around">
               <p className="text-lg">
-                <span className="font-bold">Rank:</span> {marksheet.rank}
+                <span className="font-bold">Division:</span> {marksheet.division}
               </p>
-            )}
-          </div>
-          
-          {/* Signatures */}
-          <div className="grid grid-cols-3 gap-8 mt-12">
-            <div className="text-center">
-              <div className="h-16 border-b border-gray-400 mb-2"></div>
-              <p className="font-semibold">Parent Signature</p>
+              <p className="text-lg">
+                <span className="font-bold">Grade:</span> {marksheet.grade}
+              </p>
+              <p className="text-lg">
+                <span className="font-bold">Percentage:</span> {marksheet.percentage}%
+              </p>
+              {marksheet.rank && (
+                <p className="text-lg">
+                  <span className="font-bold">Rank:</span> {marksheet.rank}
+                </p>
+              )}
             </div>
-            <div className="text-center">
-              <div className="h-16 border-b border-gray-400 mb-2 relative">
-                {/* Sample signature */}
-                <Image 
-                  src="/kais.png"
-                  alt="Signature"
-                  width={120}
-                  height={40}
-                  className="absolute left-1/2 transform -translate-x-1/2"
-                  onError={(e) => {
-                    console.error('Signature image failed to load');
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
+
+            {/* Signatures */}
+            <div className="grid grid-cols-3 gap-8 mt-12">
+              <div className="text-center">
+                <div className="h-16 border-b border-gray-400 mb-2"></div>
+                <p className="font-semibold">Parent Signature</p>
               </div>
-              <p className="font-semibold">Director&apos;s Signature</p>
-            </div>
+              <div className="text-center">
+                <div className="h-16 border-b border-gray-400 mb-2 relative">
+                  {/* Sample signature */}
+                  <Image
+                    src="/kais.png"
+                    alt="Signature"
+                    width={120}
+                    height={40}
+                    className="absolute left-1/2 transform -translate-x-1/2"
+                    onError={(e) => {
+                      console.error('Signature image failed to load');
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                </div>
+                <p className="font-semibold">Director&apos;s Signature</p>
+              </div>
               <div className="text-center">
                 <div className="h-16 border-b border-gray-400 mb-2 relative">
                   {/* Sample signature */}
@@ -1184,9 +1190,9 @@ const PrintableMarksheet: React.FC<{ marksheet: Marksheet }> = ({ marksheet }) =
                 </div>
                 <p className="font-semibold">Director&apos;s Signature</p>
               </div>
+            </div>
           </div>
         </div>
-      </div>
       </>
     );
   } catch (error) {

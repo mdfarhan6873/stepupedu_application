@@ -186,12 +186,14 @@ export async function PUT(request: NextRequest) {
       const percentage = totalMarks > 0 ? Math.round((obtainedMarks / totalMarks) * 100) : 0;
 
       // Calculate grade based on percentage
-      let grade = 'C';
+      let grade = 'F';
       if (percentage >= 90) grade = 'A+';
       else if (percentage >= 80) grade = 'A';
       else if (percentage >= 70) grade = 'B+';
       else if (percentage >= 60) grade = 'B';
-      else if (percentage >= 0) grade = 'C';
+      else if (percentage >= 45) grade = 'C';
+      else if (percentage >= 10) grade = 'D';
+      else if (percentage >= 0) grade = 'F';
 
       // Calculate division based on percentage
       let division = '3rd Division';

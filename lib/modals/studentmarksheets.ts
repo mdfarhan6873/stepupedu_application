@@ -70,8 +70,10 @@ StudentMarksheetSchema.methods.calculateGrade = function() {
   if (percentage >= 80) return 'A';
   if (percentage >= 70) return 'B+';
   if (percentage >= 60) return 'B';
-  if (percentage >= 0) return 'C';
-  return 'C';
+  if (percentage >= 45) return 'C';
+  if (percentage >= 10) return 'D';
+  if (percentage >= 0) return 'F';
+  return 'F';
 };
 
 // Calculate division based on percentage
@@ -97,8 +99,10 @@ StudentMarksheetSchema.pre('save', function(next) {
     else if (percentage >= 80) this.grade = 'A';
     else if (percentage >= 70) this.grade = 'B+';
     else if (percentage >= 60) this.grade = 'B';
-    else if (percentage >= 0) this.grade = 'C';
-    else this.grade = 'C';
+    else if (percentage >= 45) this.grade = 'C';
+    else if (percentage >= 10) this.grade = 'D';
+    else if (percentage >= 0) this.grade = 'F';
+    else this.grade = 'F';
     
     // Calculate division based on percentage
     if (percentage >= 60) this.division = '1st Division';
