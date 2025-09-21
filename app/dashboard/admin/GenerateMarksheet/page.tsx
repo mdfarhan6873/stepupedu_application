@@ -791,6 +791,8 @@ const GenerateMarksheet = () => {
                                 >
                                   <option value="">Select Subject</option>
                                   <option value="Mathematics">Mathematics</option>
+                                  <option value="PCMB">PCMB</option>
+                                  <option value="PCMB-SST">PCMB-SST</option>
                                   <option value="Urdu">Urdu</option>
                                   <option value="English">English</option>
                                   <option value="Hindi">Hindi</option>
@@ -805,8 +807,6 @@ const GenerateMarksheet = () => {
                                   <option value="Geography">Geography</option>
                                   <option value="Computer Science">Computer Science</option>
                                   <option value="Physical Education">Physical Education</option>
-                                  <option value="Art">Art</option>
-                                  <option value="Music">Music</option>
                                   <option value="Other">Other</option>
                                 </select>
                                 {subject.subject === 'Other' && (
