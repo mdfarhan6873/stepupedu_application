@@ -4,17 +4,26 @@ import Student from "@/lib/modals/student";
 import bcrypt from "bcryptjs";
 import { auth } from "@/auth";
 
-// GET - Fetch all students
-export async function GET() {
+// GET - Fetch all students with optional filters
+export async function GET(request: NextRequest) {
   try {
     const session = await auth();
-    
+
     if (!session || session.user.role !== "admin") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const { searchParams } = new URL(request.url);
+    const classFilter = searchParams.get('class');
+    const sectionFilter = searchParams.get('section');
+
     await connectToDatabase();
-    const students = await Student.find({}).sort({ createdAt: -1 });
+
+    const query: any = {};
+    if (classFilter) query.class = classFilter;
+    if (sectionFilter) query.section = sectionFilter;
+
+    const students = await Student.find(query).sort({ rollNo: 1 });
     return NextResponse.json({
       success: true,
       data: students
